@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/login_page_fragment">
+
+    <fragment
+        android:id="@+id/login_page_fragment"
+        android:name="com.example.mypizza.login_page_fragment"
+        android:label="fragment_login_page_fragment"
+        tools:layout="@layout/fragment_login_page_fragment" >
+        <action
+            android:id="@+id/action_login_page_fragment_to_pizzas_display_fragment"
+            app:destination="@id/pizzas_display_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registration_page_fragment"
+        android:name="com.example.mypizza.registration_page_fragment"
+        android:label="sadas"
+        tools:layout="@layout/sadas" />
+    <fragment
+        android:id="@+id/pizzas_display_fragment"
+        android:name="com.example.mypizza.pizzas_display_fragment"
+        android:label="fragment_pizzas_display_fragment"
+        tools:layout="@layout/fragment_pizzas_display_fragment" >
+        <action
+            android:id="@+id/action_pizzas_display_fragment_to_pizza_details_fragment"
+            app:destination="@id/pizza_details_fragment" />
+        <action
+            android:id="@+id/action_pizzas_display_fragment_to_personal_page_costumer_fragment"
+            app:destination="@id/personal_page_costumer_fragment" />
+        <action
+            android:id="@+id/action_pizzas_display_fragment_to_personal_page_manager_fragment"
+            app:destination="@id/personal_page_manager_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pizza_details_fragment"
+        android:name="com.example.mypizza.pizza_details_fragment"
+        android:label="fragment_pizza_details_fragment"
+        tools:layout="@layout/fragment_pizza_details_fragment" />
+    <fragment
+        android:id="@+id/personal_page_costumer_fragment"
+        android:name="com.example.mypizza.personal_page_fragment"
+        android:label="fragment_personal_page_fragment"
+        tools:layout="@layout/fragment_personal_page_fragment" />
+    <fragment
+        android:id="@+id/personal_page_manager_fragment"
+        android:name="com.example.mypizza.personal_page_manager_fragment"
+        android:label="fragment_personal_page_manager_fragment"
+        tools:layout="@layout/fragment_personal_page_manager_fragment" />
+</navigation>
