@@ -38,7 +38,11 @@
         android:id="@+id/pizza_details_fragment"
         android:name="com.example.mypizza.pizza_details_fragment"
         android:label="fragment_pizza_details_fragment"
-        tools:layout="@layout/fragment_pizza_details_fragment" />
+        tools:layout="@layout/fragment_pizza_details_fragment" >
+        <action
+            android:id="@+id/action_pizza_details_fragment_to_write_review_fragment"
+            app:destination="@id/write_review_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/personal_page_costumer_fragment"
         android:name="com.example.mypizza.personal_page_fragment"
@@ -48,5 +52,27 @@
         android:id="@+id/personal_page_manager_fragment"
         android:name="com.example.mypizza.personal_page_manager_fragment"
         android:label="fragment_personal_page_manager_fragment"
-        tools:layout="@layout/fragment_personal_page_manager_fragment" />
+        tools:layout="@layout/fragment_personal_page_manager_fragment" >
+        <action
+            android:id="@+id/action_personal_page_manager_fragment_to_add_pizza_fragment"
+            app:destination="@id/add_pizza_fragment" />
+        <action
+            android:id="@+id/action_personal_page_manager_fragment_to_watch_all_reviews_manager_fragment"
+            app:destination="@id/watch_all_reviews_manager_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/add_pizza_fragment"
+        android:name="com.example.mypizza.add_pizza_fragment"
+        android:label="fragment_add_pizza_fragment"
+        tools:layout="@layout/fragment_add_pizza_fragment" />
+    <fragment
+        android:id="@+id/write_review_fragment"
+        android:name="com.example.mypizza.write_review_fragment"
+        android:label="fragment_write_review_fragment"
+        tools:layout="@layout/fragment_write_review_fragment" />
+    <fragment
+        android:id="@+id/watch_all_reviews_manager_fragment"
+        android:name="com.example.mypizza.watch_all_reviews_manager_fragment"
+        android:label="fragment_watch_all_reviews_manager_fragment"
+        tools:layout="@layout/fragment_watch_all_reviews_manager_fragment" />
 </navigation>
