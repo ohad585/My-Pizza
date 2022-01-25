@@ -5,12 +5,14 @@
       <map>
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/activity_main.xml" value="0.24818840579710144" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/fragment_login_page_fragment.xml" value="0.125" />
+        <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/fragment_personal_page_manager_fragment.xml" value="0.1" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/login_page_fragment.xml" value="0.125" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/personal_page_manager__fragment.xml" value="0.125" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/pizza_details.xml" value="0.25416666666666665" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/pizza_row.xml" value="0.24818840579710144" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/pizzas_display.xml" value="0.24818840579710144" />
-        <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/registration.xml" value="0.2" />
+        <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/registration.xml" value="0.144" />
+        <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/registration_page_fragment.xml" value="0.25" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/review_line_show.xml" value="0.125" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/write_review.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/layout/add_pizza_fragment.xml" value="0.13020833333333334" />

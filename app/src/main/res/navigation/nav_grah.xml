@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/login_page_fragment">
+    app:startDestination="@id/registration_page_fragment">
 
     <fragment
         android:id="@+id/login_page_fragment"
         android:name="com.example.mypizza.login_page_fragment"
         android:label="fragment_login_page_fragment"
-        tools:layout="@layout/fragment_login_page_fragment" >
+        tools:layout="@layout/login_page_fragment" >
         <action
             android:id="@+id/action_login_page_fragment_to_pizzas_display_fragment"
             app:destination="@id/pizzas_display_fragment" />
@@ -17,13 +17,17 @@
     <fragment
         android:id="@+id/registration_page_fragment"
         android:name="com.example.mypizza.registration_page_fragment"
-        android:label="sadas"
-        tools:layout="@layout/sadas" />
+        android:label="registration_page_fragment"
+        tools:layout="@layout/registration_page_fragment" >
+        <action
+            android:id="@+id/action_registration_page_fragment_to_login_page_fragment"
+            app:destination="@id/login_page_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/pizzas_display_fragment"
         android:name="com.example.mypizza.pizzas_display_fragment"
         android:label="fragment_pizzas_display_fragment"
-        tools:layout="@layout/fragment_pizzas_display_fragment" >
+        tools:layout="@layout/pizzas_display" >
         <action
             android:id="@+id/action_pizzas_display_fragment_to_pizza_details_fragment"
             app:destination="@id/pizza_details_fragment" />
@@ -38,16 +42,16 @@
         android:id="@+id/pizza_details_fragment"
         android:name="com.example.mypizza.pizza_details_fragment"
         android:label="fragment_pizza_details_fragment"
-        tools:layout="@layout/fragment_pizza_details_fragment" >
+        tools:layout="@layout/pizza_details" >
         <action
             android:id="@+id/action_pizza_details_fragment_to_write_review_fragment"
             app:destination="@id/write_review_fragment" />
     </fragment>
     <fragment
         android:id="@+id/personal_page_costumer_fragment"
-        android:name="com.example.mypizza.personal_page_fragment"
+        android:name="com.example.mypizza.personal_page_costumer_fragment"
         android:label="fragment_personal_page_fragment"
-        tools:layout="@layout/fragment_personal_page_fragment" />
+        tools:layout="@layout/personal_page_costumer__fragment" />
     <fragment
         android:id="@+id/personal_page_manager_fragment"
         android:name="com.example.mypizza.personal_page_manager_fragment"
@@ -64,15 +68,15 @@
         android:id="@+id/add_pizza_fragment"
         android:name="com.example.mypizza.add_pizza_fragment"
         android:label="fragment_add_pizza_fragment"
-        tools:layout="@layout/fragment_add_pizza_fragment" />
+        tools:layout="@layout/add_pizza_fragment" />
     <fragment
         android:id="@+id/write_review_fragment"
         android:name="com.example.mypizza.write_review_fragment"
         android:label="fragment_write_review_fragment"
-        tools:layout="@layout/fragment_write_review_fragment" />
+        tools:layout="@layout/write_review" />
     <fragment
         android:id="@+id/watch_all_reviews_manager_fragment"
         android:name="com.example.mypizza.watch_all_reviews_manager_fragment"
         android:label="fragment_watch_all_reviews_manager_fragment"
-        tools:layout="@layout/fragment_watch_all_reviews_manager_fragment" />
+        tools:layout="@layout/watch_all_reviews_manager" />
 </navigation>
