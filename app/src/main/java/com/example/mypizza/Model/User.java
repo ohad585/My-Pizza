@@ -1,6 +1,8 @@
 package com.example.mypizza.Model;
 
 
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,13 +10,24 @@ public class User {
     private String password;
     private String phoneNum;
     private String email;
+    private String uid;
+    private boolean admin;
 
     public User() {}
 
-    public User(String em,String pass, String phone) {
+    public User(String em,String pass, String phone,boolean ad,String id) {
         password=pass;
         phoneNum=phone;
         email=em;
+        uid=id;
+        admin=ad;
+    }
+
+    public User(FirebaseUser user) {
+        this.email=user.getEmail();
+        this.password="Classified";
+        this.phoneNum=user.getPhoneNumber();;
+        this.uid=user.getUid();
     }
 
     public String getEmail() {
@@ -29,6 +42,8 @@ public class User {
         return phoneNum;
     }
 
+    public String getUid() { return uid; }
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -41,14 +56,21 @@ public class User {
         this.phoneNum = phoneNum;
     }
 
+    public void setUid(String uid) { this.uid = uid; }
+
+    private boolean isAdmin() { return admin; }
+
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
         json.put("email", getEmail());
         json.put("password", getPassword());
         json.put("phone", getPhoneNum());
+        json.put("uid",getUid());
+        json.put("admin",isAdmin());
         return json;
     }
+
 
     static User fromJson(Map<String,Object> json){
         String email = (String)json.get("email");
@@ -57,7 +79,9 @@ public class User {
         }
         String password = (String)json.get("password");
         String phone = (String)json.get("phone");
-        User user = new User(email,password,phone);
+        String uid = (String)json.get("uid");
+        boolean admin= (boolean)json.get("admin");
+        User user = new User(email,password,phone,admin,uid);
         return user;
     }
 

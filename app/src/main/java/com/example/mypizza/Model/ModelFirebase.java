@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,8 +29,8 @@ public class ModelFirebase {
                 });
     }
 
-    public void getUserByUserName(String userName, Model.GetUserByUserNameListener listener) {
-        DocumentReference docRef = db.collection("users").document(userName);
+    public void getUserByEmail(String email, Model.GetUserByUserNameListener listener) {
+        DocumentReference docRef = db.collection("users").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -79,7 +80,7 @@ public class ModelFirebase {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    listener.onComplete();
+                    listener.onComplete(mAuth.getCurrentUser().getUid());
                     Log.d("Tag","success");
                 } else {
                     Log.d("Tag","not success",task.getException());
@@ -88,5 +89,28 @@ public class ModelFirebase {
             }
         });
 
+    }
+    public void signInWithEmail(String email,String password ,Model.SignInWithEmailPassListener listener ){
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("TAG", "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            getUserByEmail(user.getEmail(), new Model.GetUserByUserNameListener() {
+                                @Override
+                                public void onComplete(User u) {
+                                    listener.onComplete(u,true);
+                                }
+                            });
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                            listener.onComplete(null,false);
+                        }
+                    }
+                });
     }
 }

@@ -31,7 +31,7 @@ public class Model {
 
 
     public void getUserByEmail(String email,GetUserByUserNameListener listener) {
-        modelFirebase.getUserByUserName(email, listener);
+        modelFirebase.getUserByEmail(email, listener);
     }
     public interface checkLogInListener{
         void onComplete(User u);
@@ -42,10 +42,16 @@ public class Model {
 //    }
 
     public interface RegistrationByMailPassListener{
-        void onComplete();
+        void onComplete(String uid);
     }
 
     public void regModel(String email,String pass,RegistrationByMailPassListener listener){
         modelFirebase.reg(email, pass, listener);
+    }
+    public interface SignInWithEmailPassListener{
+        void onComplete(User user, boolean success);
+    }
+    public void signInWithEmailPass(String email,String password,SignInWithEmailPassListener listener){
+        modelFirebase.signInWithEmail(email,password,listener);
     }
 }
