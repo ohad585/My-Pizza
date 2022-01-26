@@ -56,7 +56,7 @@
         android:id="@+id/personal_page_manager_fragment"
         android:name="com.example.mypizza.personal_page_manager_fragment"
         android:label="fragment_personal_page_manager_fragment"
-        tools:layout="@layout/fragment_personal_page_manager_fragment" >
+        tools:layout="@layout/personal_page_manager__fragment" >
         <action
             android:id="@+id/action_personal_page_manager_fragment_to_add_pizza_fragment"
             app:destination="@id/add_pizza_fragment" />

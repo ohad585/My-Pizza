@@ -54,10 +54,12 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress"
+        android:minHeight="48dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/login_email_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.92"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <EditText
         android:id="@+id/login_password_et"
@@ -66,9 +68,11 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:inputType="textPassword"
+        android:minHeight="48dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/login_password_tv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/login_email_et" />
+        app:layout_constraintStart_toStartOf="@+id/login_email_et"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/login_login_btn"

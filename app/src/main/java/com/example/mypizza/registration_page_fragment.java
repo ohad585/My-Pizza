@@ -58,6 +58,7 @@ public class registration_page_fragment extends Fragment {
         String pass1=pass1_et.getText().toString();
         String pass2=pass2_et.getText().toString();
         String mail=mail_et.getText().toString();
+        //Add check pass1=pass2
         //Add check for empty values.
         if(admin_cb.isChecked()){
             //Admin Registration
