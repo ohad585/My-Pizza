@@ -1,5 +1,7 @@
 package com.example.mypizza.Model;
 
+import android.graphics.Bitmap;
+
 public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
@@ -53,5 +55,36 @@ public class Model {
     }
     public void signInWithEmailPass(String email,String password,SignInWithEmailPassListener listener){
         modelFirebase.signInWithEmail(email,password,listener);
+    }
+
+    public interface SaveImageListener{
+        void onComplete(String url);
+    }
+    public void saveImage(Bitmap bitmap,String description,SaveImageListener listener) {
+        modelFirebase.saveImage(bitmap,description,listener);
+    }
+    public interface AddPizzaListener{
+        void onComplete(boolean flag);
+    }
+    public interface GetPizzaByDescriptionListener{
+        void onComplete(Pizza p);
+    }
+
+    public void getPizzaByDescription(String description,GetPizzaByDescriptionListener listener) {
+        modelFirebase.getPizzaByDescription(description, listener);
+    }
+
+    public void addPizza(Pizza pizza, AddPizzaListener listener) {
+        getPizzaByDescription(pizza.getDescription(), new GetPizzaByDescriptionListener() {
+            @Override
+            public void onComplete(Pizza p) {
+                if (p==null){
+                    modelFirebase.addPizza(pizza, listener);
+                }
+                else{
+                    listener.onComplete(false);
+                }
+            }
+        });
     }
 }

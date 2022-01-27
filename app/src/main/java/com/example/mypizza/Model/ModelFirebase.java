@@ -1,6 +1,8 @@
 package com.example.mypizza.Model;
 
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class ModelFirebase {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
@@ -111,6 +118,58 @@ public class ModelFirebase {
                             listener.onComplete(null,false);
                         }
                     }
+                });
+    }
+
+
+    public void saveImage(Bitmap bitmap, String description,Model.SaveImageListener listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imageRef = storageRef.child("pizza/" + description + ".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> listener.onComplete(null))//failure
+                .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()//success
+                        .addOnSuccessListener(uri -> {
+                            Uri downloadUrl = uri;
+                            listener.onComplete(downloadUrl.toString());
+                        }));
+    }
+
+    public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
+        DocumentReference docRef = db.collection("pizzas").document(description);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //if sucess return the pizza
+                        Pizza p = Pizza.fromJson(document.getData());
+                        listener.onComplete(p);
+                    } else {
+                        listener.onComplete(null);
+                    }
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                    listener.onComplete(null);
+                }
+            }
+        });
+    }
+
+    public void addPizza(Pizza p, Model.AddPizzaListener listener) {
+        db.collection("pizzas")
+                .document(p.getDescription()).set(p.toJson())
+                .addOnSuccessListener((successListener)-> {
+                    listener.onComplete(true);
+                })
+                .addOnFailureListener((e)-> {
+                    Log.d("TAG", e.getMessage());
                 });
     }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/registration_page_fragment">
+    app:startDestination="@id/add_pizza_fragment">
 
     <fragment
         android:id="@+id/login_page_fragment"
@@ -68,7 +68,11 @@
         android:id="@+id/add_pizza_fragment"
         android:name="com.example.mypizza.add_pizza_fragment"
         android:label="fragment_add_pizza_fragment"
-        tools:layout="@layout/add_pizza_fragment" />
+        tools:layout="@layout/add_pizza_fragment" >
+        <action
+            android:id="@+id/action_add_pizza_fragment_to_personal_page_manager_fragment"
+            app:destination="@id/personal_page_manager_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/write_review_fragment"
         android:name="com.example.mypizza.write_review_fragment"
