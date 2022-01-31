@@ -32,7 +32,7 @@ public class ModelFirebase {
                     listener.onComplete(true);
                 })
                 .addOnFailureListener((e)-> {
-                    Log.d("TAG", e.getMessage());
+                    listener.onComplete(false);
                 });
     }
 
@@ -88,10 +88,8 @@ public class ModelFirebase {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     listener.onComplete(mAuth.getCurrentUser().getUid());
-                    Log.d("Tag","success");
                 } else {
-                    Log.d("Tag","not success",task.getException());
-
+                    listener.onComplete(null);
                 }
             }
         });

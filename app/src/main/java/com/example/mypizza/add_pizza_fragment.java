@@ -73,25 +73,26 @@ public class add_pizza_fragment extends Fragment {
         addPizzaBtn.setEnabled(false);
         String price = pizzaPrice.getText().toString();
         String description = pizzaDescription.getText().toString();
-        Pizza p = new Pizza(price,description);
-        if (bitmap == null){
-                Navigation.findNavController(view).navigateUp();
-        }else {
-        Model.instance.saveImage(bitmap,description,new Model.SaveImageListener(){
-            @Override
-            public void onComplete(String url) {
-                p.setImgUrl(url);
-                Model.instance.addPizza(p, new Model.AddPizzaListener() {
-                    @Override
-                    public void onComplete(boolean flag) {
-                        if(flag==true){
-                            Navigation.findNavController(view).navigate(R.id.action_add_pizza_fragment_to_personal_page_manager_fragment);
+        Pizza p = new Pizza(price, description);
+        if (bitmap == null) {
+            Navigation.findNavController(view).navigateUp();
+        } else {
+            Model.instance.saveImage(bitmap, description, new Model.SaveImageListener() {
+                @Override
+                public void onComplete(String url) {
+                    p.setImgUrl(url);
+                    Model.instance.addPizza(p, new Model.AddPizzaListener() {
+                        @Override
+                        public void onComplete(boolean flag) {
+                            if (flag == true) {
+                                Navigation.findNavController(view).navigate(R.id.action_add_pizza_fragment_to_personal_page_manager_fragment);
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
 
+        }
     }
 }
 
