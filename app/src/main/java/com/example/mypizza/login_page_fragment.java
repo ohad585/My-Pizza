@@ -3,6 +3,7 @@ package com.example.mypizza;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.example.mypizza.Model.Model;
 import com.example.mypizza.Model.User;
 
 public class login_page_fragment extends Fragment {
+    View view;
     TextView email;
     TextView password;
     View progBar;
@@ -25,7 +27,7 @@ public class login_page_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.login_page_fragment, container, false);
+        view= inflater.inflate(R.layout.login_page_fragment, container, false);
         email =view.findViewById(R.id.login_email_et);
         password =view.findViewById(R.id.login_password_et);
         progBar = view.findViewById(R.id.login_progressBar);
@@ -48,6 +50,7 @@ public class login_page_fragment extends Fragment {
             if(success){
                 progBar.setVisibility(View.INVISIBLE);
                 Log.d("TAG", "loginUser: "+user.getEmail()+" "+user.getUid());
+                Navigation.findNavController(view).navigate(R.id.action_login_page_fragment_to_personal_page_costumer_fragment);
             }
             else {
                 progBar.setVisibility(View.INVISIBLE);

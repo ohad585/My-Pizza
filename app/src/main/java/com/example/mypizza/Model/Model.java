@@ -87,4 +87,11 @@ public class Model {
             }
         });
     }
+
+    public interface getCurrentUserListener{
+        void onComplete(User user);
+    }
+    public void getCurrentUser(getCurrentUserListener listener){
+        modelFirebase.getCurrentUser(listener);
+    }
 }

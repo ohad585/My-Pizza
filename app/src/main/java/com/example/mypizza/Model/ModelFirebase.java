@@ -170,4 +170,9 @@ public class ModelFirebase {
                     Log.d("TAG", e.getMessage());
                 });
     }
+
+    public void getCurrentUser(Model.getCurrentUserListener listener){
+        FirebaseUser user = mAuth.getCurrentUser();
+        listener.onComplete(new User(user));
+    }
 }
