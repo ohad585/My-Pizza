@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Pizza {
+    private String uid;
     private String price;
     private String description;
     private String ImgUrl;
@@ -12,6 +13,15 @@ public class Pizza {
     public Pizza(String p,String d) {
         price=p;
         description=d;
+        uid="";
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getPrice() {

@@ -64,7 +64,7 @@ public class Model {
         modelFirebase.saveImage(bitmap,description,listener);
     }
     public interface AddPizzaListener{
-        void onComplete(boolean flag);
+        void onComplete(boolean flag,String uid);
     }
     public interface GetPizzaByDescriptionListener{
         void onComplete(Pizza p);
@@ -75,17 +75,7 @@ public class Model {
     }
 
     public void addPizza(Pizza pizza, AddPizzaListener listener) {
-        getPizzaByDescription(pizza.getDescription(), new GetPizzaByDescriptionListener() {
-            @Override
-            public void onComplete(Pizza p) {
-                if (p==null){
-                    modelFirebase.addPizza(pizza, listener);
-                }
-                else{
-                    listener.onComplete(false);
-                }
-            }
-        });
+        modelFirebase.addPizza(pizza, listener);
     }
 
     public interface getCurrentUserListener{

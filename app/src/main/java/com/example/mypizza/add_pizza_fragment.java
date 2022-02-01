@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,8 +84,10 @@ public class add_pizza_fragment extends Fragment {
                     p.setImgUrl(url);
                     Model.instance.addPizza(p, new Model.AddPizzaListener() {
                         @Override
-                        public void onComplete(boolean flag) {
+                        public void onComplete(boolean flag,String uid) {
                             if (flag == true) {
+                                p.setUid(uid);
+                                Log.d("TAG", "onComplete: "+p.getUid());
                                 Navigation.findNavController(view).navigate(R.id.action_add_pizza_fragment_to_personal_page_manager_fragment);
                             }
                         }

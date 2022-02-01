@@ -12,9 +12,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -139,32 +142,31 @@ public class ModelFirebase {
     }
 
     public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
-        DocumentReference docRef = db.collection("pizzas").document(description);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("pizzas").whereEqualTo("description",description)
+        .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //if sucess return the pizza
-                        Pizza p = Pizza.fromJson(document.getData());
-                        listener.onComplete(p);
-                    } else {
-                        listener.onComplete(null);
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //if sucess return the pizza
+                            Pizza p = Pizza.fromJson(document.getData());
+                            listener.onComplete(p);
+                        } else {
+                            listener.onComplete(null);
+                        }
                     }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                    listener.onComplete(null);
-                }
+                }else listener.onComplete(null);
             }
         });
     }
 
+
     public void addPizza(Pizza p, Model.AddPizzaListener listener) {
         db.collection("pizzas")
-                .document(p.getDescription()).set(p.toJson())
+                .add(p.toJson())
                 .addOnSuccessListener((successListener)-> {
-                    listener.onComplete(true);
+                    listener.onComplete(true,successListener.getId().toString());
                 })
                 .addOnFailureListener((e)-> {
                     Log.d("TAG", e.getMessage());
