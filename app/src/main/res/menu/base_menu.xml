@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_personal_page"
+        android:icon="@drawable/profileicon"
+        android:title="personal page"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/menu_pizzas_menu"
+        android:title="pizza's menu" />
+    <item
+        android:id="@+id/menu_log_in"
+        android:title="log in" />
+    <item
+        android:id="@+id/menu_registration"
+        android:title="registration" />
+</menu>
