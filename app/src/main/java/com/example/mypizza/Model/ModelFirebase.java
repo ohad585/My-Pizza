@@ -8,7 +8,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
 
 public class ModelFirebase {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
@@ -176,5 +179,32 @@ public class ModelFirebase {
     public void getCurrentUser(Model.getCurrentUserListener listener){
         FirebaseUser user = mAuth.getCurrentUser();
         listener.onComplete(new User(user));
+    }
+
+    public void getAllPizzas(long since,Model.GetAllPizzasListener listener){
+        db.collection("pizzas")
+                .whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED,new Timestamp(since, 0))
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Pizza> pizzasList = new LinkedList<Pizza>();
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc: task.getResult()){
+                        Pizza s = Pizza.fromJson(doc.getData());
+                        if (s != null) {
+                            pizzasList.add(s);
+                        }
+                    }
+                }else{
+
+                }
+                listener.onComplete(pizzasList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
     }
 }
