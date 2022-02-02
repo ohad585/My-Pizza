@@ -9,7 +9,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.navigation.Navigation;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mypizza.Model.Model;
 import com.example.mypizza.Model.Pizza;
 import com.squareup.picasso.Picasso;
 
@@ -28,8 +30,10 @@ public class pizzas_display_fragment extends Fragment {
     View view;
     PizzasDisplayFragmentViewModel viewModel;
     MyAdapter adapter;
+    SwipeRefreshLayout swipeRefresh;
+    View progBar;
 
-    //Todo: Add Swipe refresh
+
     //Todo: Add loading bar
 
 
@@ -45,6 +49,8 @@ public class pizzas_display_fragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.pizzas_display, container, false);
 
+        progBar = view.findViewById(R.id.pizzas_display_progressBar);
+        progBar.setVisibility(View.INVISIBLE);
         RecyclerView list = view.findViewById(R.id.pizzas_display_rv);
         list.setHasFixedSize(true);
 
@@ -56,10 +62,22 @@ public class pizzas_display_fragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
+                progBar.setVisibility(View.VISIBLE);
                 Pizza pz = viewModel.getData().getValue().get(position);
+                
+
                 Log.d("TAG", "onItemClick: "+pz.getDescription());
             }
         });
+        swipeRefresh = view.findViewById(R.id.pizzas_display_swipe_refresh);
+
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Model.instance.reloadPizzasList();
+            }
+        });
+
 
         if(viewModel.getData()==null){refreshData();};
 
@@ -69,6 +87,10 @@ public class pizzas_display_fragment extends Fragment {
                 adapter.notifyDataSetChanged();
             }
         });
+
+        swipeRefresh.setRefreshing(Model.instance.getPizzaListLoadingState().getValue()== Model.LoadingState.loading);
+        Model.instance.getPizzaListLoadingState().observe(getViewLifecycleOwner(),loadingState ->
+                swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading));
 
         return view;
     }
