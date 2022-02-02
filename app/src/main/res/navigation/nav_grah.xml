@@ -3,21 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_page_fragment">
+    app:startDestination="@id/home_page_fragment2">
 
     <fragment
         android:id="@+id/login_page_fragment"
         android:name="com.example.mypizza.login_page_fragment"
-        android:label="log in page"
+        android:label="login page"
         tools:layout="@layout/login_page_fragment">
         <action
             android:id="@+id/action_login_page_fragment_to_pizzas_display_fragment"
             app:destination="@id/pizzas_display_fragment" />
+        <action
+            android:id="@+id/action_login_page_fragment_to_personal_page_costumer_fragment"
+            app:destination="@id/personal_page_costumer_fragment" />
     </fragment>
     <fragment
         android:id="@+id/registration_page_fragment"
         android:name="com.example.mypizza.registration_page_fragment"
-        android:label="registration page"
+        android:label="registration"
         tools:layout="@layout/registration_page_fragment">
         <action
             android:id="@+id/action_registration_page_fragment_to_login_page_fragment"
@@ -26,7 +29,7 @@
     <fragment
         android:id="@+id/pizzas_display_fragment"
         android:name="com.example.mypizza.pizzas_display_fragment"
-        android:label="pizza's menu"
+        android:label="pizzas menu"
         tools:layout="@layout/pizzas_display">
         <action
             android:id="@+id/action_pizzas_display_fragment_to_pizza_details_fragment"
@@ -84,15 +87,16 @@
         android:label="all reviews"
         tools:layout="@layout/watch_all_reviews_manager" />
     <fragment
-        android:id="@+id/home_page_fragment"
+        android:id="@+id/home_page_fragment2"
         android:name="com.example.mypizza.home_page_fragment"
         android:label="My Pizza"
-        tools:layout="@layout/home_page_fragment">
+        tools:layout="@layout/home_page_fragment2">
+
         <action
-            android:id="@+id/action_home_page_fragment_to_login_page_fragment"
+            android:id="@+id/action_home_page_fragment2_to_login_page_fragment"
             app:destination="@id/login_page_fragment" />
         <action
-            android:id="@+id/action_home_page_fragment_to_registration_page_fragment"
+            android:id="@+id/action_home_page_fragment2_to_registration_page_fragment"
             app:destination="@id/registration_page_fragment" />
     </fragment>
 </navigation>

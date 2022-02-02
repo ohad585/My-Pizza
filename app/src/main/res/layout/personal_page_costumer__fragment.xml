@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="My Review:"
+        android:text="My Reviews:"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.452"
@@ -33,6 +33,7 @@
         android:id="@+id/personal_page_costumer_enailAddress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:text="israel@gmail.com"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/personal_page_costumer_emailLabel_tv"
@@ -62,5 +63,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/avatar" />
+
+    <ProgressBar
+        android:id="@+id/personal_page_costumer_progBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="113dp"
+        android:layout_height="125dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

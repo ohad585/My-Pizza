@@ -2,23 +2,17 @@ package com.example.mypizza;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 
 public class home_page_fragment extends Fragment {
@@ -30,7 +24,7 @@ public class home_page_fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.home_page_fragment, container, false);
+        View view= inflater.inflate(R.layout.home_page_fragment2, container, false);
         setHasOptionsMenu(true);
         NavHostFragment nav_host = (NavHostFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView2);
         navCtrl = nav_host.getNavController();
@@ -54,7 +48,7 @@ public class home_page_fragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        //menu.clear(); //hide menu at this page that how isnt sign in or reg cant enter
+         menu.clear(); //hide menu at this page that how isnt sign in or reg cant enter
     }
 
 

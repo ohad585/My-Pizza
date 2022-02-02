@@ -8,18 +8,24 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.LinkedList;
 
 public class ModelFirebase {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
@@ -32,7 +38,7 @@ public class ModelFirebase {
                     listener.onComplete(true);
                 })
                 .addOnFailureListener((e)-> {
-                    Log.d("TAG", e.getMessage());
+                    listener.onComplete(false);
                 });
     }
 
@@ -88,10 +94,8 @@ public class ModelFirebase {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     listener.onComplete(mAuth.getCurrentUser().getUid());
-                    Log.d("Tag","success");
                 } else {
-                    Log.d("Tag","not success",task.getException());
-
+                    listener.onComplete(null);
                 }
             }
         });
@@ -141,35 +145,66 @@ public class ModelFirebase {
     }
 
     public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
-        DocumentReference docRef = db.collection("pizzas").document(description);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        db.collection("pizzas").whereEqualTo("description",description)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //if sucess return the pizza
-                        Pizza p = Pizza.fromJson(document.getData());
-                        listener.onComplete(p);
-                    } else {
-                        listener.onComplete(null);
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //if sucess return the pizza
+                            Pizza p = Pizza.fromJson(document.getData());
+                            listener.onComplete(p);
+                        } else {
+                            listener.onComplete(null);
+                        }
                     }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                    listener.onComplete(null);
-                }
+                }else listener.onComplete(null);
             }
         });
     }
 
+
     public void addPizza(Pizza p, Model.AddPizzaListener listener) {
         db.collection("pizzas")
-                .document(p.getDescription()).set(p.toJson())
+                .add(p.toJson())
                 .addOnSuccessListener((successListener)-> {
-                    listener.onComplete(true);
+                    listener.onComplete(true,successListener.getId().toString());
                 })
                 .addOnFailureListener((e)-> {
                     Log.d("TAG", e.getMessage());
                 });
+    }
+
+    public void getCurrentUser(Model.getCurrentUserListener listener){
+        FirebaseUser user = mAuth.getCurrentUser();
+        listener.onComplete(new User(user));
+    }
+
+    public void getAllPizzas(long since,Model.GetAllPizzasListener listener){
+        db.collection("pizzas")
+                .whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED,new Timestamp(since, 0))
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Pizza> pizzasList = new LinkedList<Pizza>();
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc: task.getResult()){
+                        Pizza s = Pizza.fromJson(doc.getData());
+                        if (s != null) {
+                            pizzasList.add(s);
+                        }
+                    }
+                }else{
+
+                }
+                listener.onComplete(pizzasList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
     }
 }

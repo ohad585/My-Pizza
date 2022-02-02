@@ -3,6 +3,7 @@ package com.example.mypizza;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -17,7 +18,7 @@ import com.example.mypizza.Model.User;
 
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
-    User u=new User();
+    User u=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     else if (u.isAdmin()==false){
                         navCtrl.navigate(R.id.personal_page_costumer_fragment);
                     }
+//                    else{
+//                        DialogFragment newFragment = new personalPageDialogFragment();
+//                        newFragment.show(getSupportFragmentManager(), "TAG");
+//                    }
 
                     return true;
                 case R.id.menu_log_in:
