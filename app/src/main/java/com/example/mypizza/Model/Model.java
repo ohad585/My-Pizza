@@ -14,9 +14,24 @@ public class Model {
     public static final Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
     MutableLiveData<List<Pizza>> pizzasListLd = new MutableLiveData<>();
+    MutableLiveData<LoadingState> pizzaListLoadingState = new MutableLiveData<LoadingState>();
+
+    public enum LoadingState{
+        loading,
+        loaded
+    }
+
+    private Model(){
+        pizzaListLoadingState.setValue(LoadingState.loaded);
+        reloadPizzasList();
+    }
 
 
-    private Model(){reloadPizzasList();}
+
+
+    public LiveData<LoadingState> getPizzaListLoadingState(){
+        return pizzaListLoadingState;
+    }
 
     public LiveData<List<Pizza>> getAll() {return pizzasListLd;
     }
@@ -25,7 +40,8 @@ public class Model {
         void onComplete(List<Pizza> data);
     }
 
-    private void reloadPizzasList(){
+    public void reloadPizzasList(){
+        pizzaListLoadingState.setValue(LoadingState.loading);
         //1. get local last update
         Long localLastUpdate = Pizza.getLocalLastUpdated();
         Log.d("TAG","localLastUpdate: " + localLastUpdate);
@@ -47,6 +63,7 @@ public class Model {
                 //5. return all records to the caller
                 List<Pizza> stList = AppLocalDB.db.pizzaDao().getAll();
                 pizzasListLd.postValue(stList);
+                pizzaListLoadingState.postValue(LoadingState.loaded);
             });
         });
     }
@@ -116,8 +133,14 @@ public class Model {
         modelFirebase.getPizzaByDescription(description, listener);
     }
 
+
     public void addPizza(Pizza pizza, AddPizzaListener listener) {
-        modelFirebase.addPizza(pizza, listener);
+        modelFirebase.addPizza(pizza, listener, new AddPizzaListener() {
+            @Override
+            public void onComplete(boolean flag, String uid) {
+                reloadPizzasList();
+            }
+        });
     }
 
     public interface getCurrentUserListener{
@@ -125,5 +148,12 @@ public class Model {
     }
     public void getCurrentUser(getCurrentUserListener listener){
         modelFirebase.getCurrentUser(listener);
+    }
+
+    public interface GetPizzaByIDListener {
+        void onComplete(Pizza pizza);
+    }
+    public void getPizzaById(String id,GetPizzaByIDListener listener){
+        modelFirebase.getPizzaByID(id,listener);
     }
 }

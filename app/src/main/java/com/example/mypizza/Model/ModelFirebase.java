@@ -18,6 +18,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,6 +32,13 @@ public class ModelFirebase {
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public ModelFirebase(){
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
+    }
+
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
                 .document(user.getEmail()).set(user.toJson())
@@ -144,6 +152,25 @@ public class ModelFirebase {
                         }));
     }
 
+    public void getPizzaByID(String id, Model.GetPizzaByIDListener listener) {
+        Log.d("TAG", "getPizzaByID: "+id);
+        DocumentReference docRef = db.collection("pizzas").document(id);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Pizza pz = Pizza.fromJson(document.getData());
+                        listener.onComplete(pz);
+                    } else {
+                        listener.onComplete(null);
+                    }
+                }
+            }
+        });
+    }
+
     public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
         db.collection("pizzas").whereEqualTo("description",description)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -165,11 +192,12 @@ public class ModelFirebase {
     }
 
 
-    public void addPizza(Pizza p, Model.AddPizzaListener listener) {
+    public void addPizza(Pizza p, Model.AddPizzaListener listener,Model.AddPizzaListener listener2) {
         db.collection("pizzas")
                 .add(p.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete(true,successListener.getId().toString());
+                    listener2.onComplete(false,null);
                 })
                 .addOnFailureListener((e)-> {
                     Log.d("TAG", e.getMessage());

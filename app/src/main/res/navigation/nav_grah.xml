@@ -32,14 +32,14 @@
         android:label="pizzas menu"
         tools:layout="@layout/pizzas_display">
         <action
-            android:id="@+id/action_pizzas_display_fragment_to_pizza_details_fragment"
-            app:destination="@id/pizza_details_fragment" />
-        <action
             android:id="@+id/action_pizzas_display_fragment_to_personal_page_costumer_fragment"
             app:destination="@id/personal_page_costumer_fragment" />
         <action
             android:id="@+id/action_pizzas_display_fragment_to_personal_page_manager_fragment"
             app:destination="@id/personal_page_manager_fragment" />
+        <action
+            android:id="@+id/action_pizzas_display_fragment_to_pizza_details_fragment"
+            app:destination="@id/pizza_details_fragment" />
     </fragment>
     <fragment
         android:id="@+id/pizza_details_fragment"
@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_pizza_details_fragment_to_write_review_fragment"
             app:destination="@id/write_review_fragment" />
+        <argument
+            android:name="pid"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/personal_page_costumer_fragment"

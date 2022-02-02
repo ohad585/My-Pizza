@@ -64,8 +64,8 @@ public class pizzas_display_fragment extends Fragment {
             public void onItemClick(int position, View v) {
                 progBar.setVisibility(View.VISIBLE);
                 Pizza pz = viewModel.getData().getValue().get(position);
-                
-
+                pizzas_display_fragmentDirections.ActionPizzasDisplayFragmentToPizzaDetailsFragment action = pizzas_display_fragmentDirections.actionPizzasDisplayFragmentToPizzaDetailsFragment(pz.getDescription());
+                Navigation.findNavController(view).navigate(action);
                 Log.d("TAG", "onItemClick: "+pz.getDescription());
             }
         });
