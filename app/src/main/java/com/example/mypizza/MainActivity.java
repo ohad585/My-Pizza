@@ -31,12 +31,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.base_menu,menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (!super.onOptionsItemSelected(item)) {
@@ -51,12 +53,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else if (u.isAdmin()==false){
                         navCtrl.navigate(R.id.personal_page_costumer_fragment);
+                    }
 
-                    }
-                    else{//user not connected
-                        personalPageDialogFragment dialog=new personalPageDialogFragment();
-                        dialog.show(getSupportFragmentManager(),"TAG");
-                    }
                     return true;
                 case R.id.menu_log_in:
                     navCtrl.navigate(R.id.login_page_fragment);

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/add_pizza_fragment">
+    app:startDestination="@id/home_page_fragment">
 
     <fragment
         android:id="@+id/login_page_fragment"
@@ -83,4 +83,16 @@
         android:name="com.example.mypizza.watch_all_reviews_manager_fragment"
         android:label="all reviews"
         tools:layout="@layout/watch_all_reviews_manager" />
+    <fragment
+        android:id="@+id/home_page_fragment"
+        android:name="com.example.mypizza.home_page_fragment"
+        android:label="My Pizza"
+        tools:layout="@layout/home_page_fragment">
+        <action
+            android:id="@+id/action_home_page_fragment_to_login_page_fragment"
+            app:destination="@id/login_page_fragment" />
+        <action
+            android:id="@+id/action_home_page_fragment_to_registration_page_fragment"
+            app:destination="@id/registration_page_fragment" />
+    </fragment>
 </navigation>

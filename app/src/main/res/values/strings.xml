@@ -5,4 +5,7 @@
     <string name="registration">Registration</string>
     <string name="register">Register</string>
     <string name="email">Email:</string>
+    <string name="my_pizza">My Pizza</string>
+    <string name="log_in">log in</string>
+    <string name="string_log_in" />
 </resources>
