@@ -16,6 +16,8 @@ public class Model {
     MutableLiveData<List<Pizza>> pizzasListLd = new MutableLiveData<>();
     MutableLiveData<LoadingState> pizzaListLoadingState = new MutableLiveData<LoadingState>();
 
+
+
     public enum LoadingState{
         loading,
         loaded
@@ -155,5 +157,12 @@ public class Model {
     }
     public void getPizzaById(String id,GetPizzaByIDListener listener){
         modelFirebase.getPizzaByID(id,listener);
+    }
+
+    public interface AddReviewListener{
+        void onComplete();
+    }
+    public void addReview(Review r, AddReviewListener listener) {
+        modelFirebase.addReview(r,listener);
     }
 }

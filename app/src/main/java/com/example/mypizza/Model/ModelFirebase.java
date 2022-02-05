@@ -235,4 +235,15 @@ public class ModelFirebase {
             }
         });
     }
+
+    public void addReview(Review r, Model.AddReviewListener listener) {
+        db.collection("reviews")
+                .add(r.toJson())
+                .addOnSuccessListener((successListener)-> {
+                    listener.onComplete();
+                })
+                .addOnFailureListener((e)-> {
+                    Log.d("TAG", e.getMessage());
+                });
+    }
 }
