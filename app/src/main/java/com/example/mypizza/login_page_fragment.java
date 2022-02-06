@@ -7,6 +7,8 @@ import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,6 +35,7 @@ public class login_page_fragment extends Fragment {
         progBar = view.findViewById(R.id.login_progressBar);
         progBar.setVisibility(View.INVISIBLE);
         Button loginBtn=view.findViewById(R.id.login_login_btn);
+        setHasOptionsMenu(true);
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,4 +61,10 @@ public class login_page_fragment extends Fragment {
             }
         });
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear(); //hide menu at this page that how isnt sign in or reg cant enter
+    }
+
 }

@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -35,6 +37,8 @@ public class registration_page_fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.registration_page_fragment, container, false);
+        setHasOptionsMenu(true);
+
         progBar = view.findViewById(R.id.reg_progressBar);
         pass1_et = view.findViewById(R.id.reg_pass1_et);
         pass2_et = view.findViewById(R.id.reg_pass2_et);
@@ -144,5 +148,10 @@ public class registration_page_fragment extends Fragment {
                     }
                 });
         alertDialog.show();
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear(); //hide menu at this page that how isnt sign in or reg cant enter
     }
 }
