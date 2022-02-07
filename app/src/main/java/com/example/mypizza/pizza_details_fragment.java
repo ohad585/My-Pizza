@@ -3,10 +3,12 @@ package com.example.mypizza;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,7 @@ public class pizza_details_fragment extends Fragment {
     TextView price;
     TextView tops;
     ImageView img;
+    Button writeReviewBtn;
     View progBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +39,15 @@ public class pizza_details_fragment extends Fragment {
         tops = view.findViewById(R.id.pizza_details_actual_toppings_tv);
         img = view.findViewById(R.id.pizza_details_img);
         progBar = view.findViewById(R.id.pizza_details_progBar);
+        writeReviewBtn = view.findViewById(R.id.pizza_details_review_btn);
+        writeReviewBtn.setClickable(false);
+        writeReviewBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pizza_details_fragmentDirections.ActionPizzaDetailsFragmentToWriteReviewFragment action = pizza_details_fragmentDirections.actionPizzaDetailsFragmentToWriteReviewFragment(p.getDescription());
+                Navigation.findNavController(view).navigate(action);
+            }
+        });
 
         progBar.setVisibility(View.VISIBLE);
         return view;
@@ -52,5 +64,6 @@ public class pizza_details_fragment extends Fragment {
 
         }
         progBar.setVisibility(View.INVISIBLE);
+        writeReviewBtn.setClickable(true);
     }
 }

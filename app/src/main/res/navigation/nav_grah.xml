@@ -83,7 +83,14 @@
         android:id="@+id/write_review_fragment"
         android:name="com.example.mypizza.write_review_fragment"
         android:label="write review"
-        tools:layout="@layout/write_review" />
+        tools:layout="@layout/write_review" >
+        <argument
+            android:name="pid"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_write_review_fragment_to_pizza_details_fragment"
+            app:destination="@id/pizza_details_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/watch_all_reviews_manager_fragment"
         android:name="com.example.mypizza.watch_all_reviews_manager_fragment"

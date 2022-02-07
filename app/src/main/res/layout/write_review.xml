@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:layout_marginBottom="88dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/write_review_cncl_btn"
@@ -24,10 +25,11 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:text="Cancle"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/write_review_save_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/write_review_save_btn" />
+        app:layout_constraintStart_toEndOf="@+id/write_review_save_btn"
+        app:layout_constraintTop_toTopOf="@+id/write_review_save_btn" />
 
     <TextView
         android:id="@+id/write_review_main_tv"
@@ -99,17 +101,28 @@
 
     <EditText
         android:id="@+id/write_review_et"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="381dp"
+        android:layout_height="62dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Enter review"
-        app:layout_constraintBottom_toTopOf="@+id/write_review_cncl_btn"
+        app:layout_constraintBottom_toTopOf="@+id/write_review_save_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/write_review_actual_tops_tv"
+        app:layout_constraintVertical_bias="0.172" />
+
+    <ProgressBar
+        android:id="@+id/write_review_progBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="151dp"
+        android:layout_height="145dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/write_review_actual_tops_tv" />
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
