@@ -95,6 +95,7 @@ public class pizzas_display_fragment extends Fragment {
         return view;
     }
     private void refreshData() {
+        Log.d("TAG", "refreshData: ");
     }
 
 

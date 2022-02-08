@@ -78,6 +78,7 @@ public class watch_all_reviews_manager_fragment extends Fragment {
         return view;
     }
     private void refreshData() {
+        Log.d("TAG", "refreshData: watch reviews");
     }
 
 

@@ -9,6 +9,8 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import com.example.mypizza.MyApplication;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +78,7 @@ public class Review {
         json.put(REVIEW, getReview());
         json.put(WRITEREMAIL, getWriterEmail());
         json.put(PIZZAID,getPizzaID());
+        json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return json;
     }
 
@@ -87,7 +90,9 @@ public class Review {
         }
         String writerE = (String)json.get(WRITEREMAIL);
         String pizzaID = (String)json.get(PIZZAID);
+        Timestamp ts =(Timestamp)json.get(LAST_UPDATED);
         Review r = new Review(review,writerE,pizzaID);
+        r.setLastUpdated(new Long(ts.getSeconds()));
         return r;
     }
 

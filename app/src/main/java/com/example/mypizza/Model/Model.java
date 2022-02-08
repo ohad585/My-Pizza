@@ -67,7 +67,7 @@ public class Model {
                 //3. update local last update date
                 //4. add new records to the local db
                 Long lLastUpdate = new Long(0);
-                Log.d("TAG", "FB returned " + list.size());
+                Log.d("TAG", "pizzas returned " + list.size());
                 for(Pizza s : list){
                     AppLocalDBPizza.db.pizzaDao().insertAll(s);
                     if (s.getLastUpdated() > lLastUpdate){
@@ -92,7 +92,7 @@ public class Model {
         modelFirebase.getAllReviews(localLastUpdate,(list)->{
             MyApplication.executorService.execute(()->{
                 Long lLastUpdate = new Long(0);
-                Log.d("TAG", "FB returned " + list.size());
+                Log.d("TAG", "reviews returned " + list.size());
                 for(Review s : list){
                     AppLocalDBReview.db.reviewDao().insertAll(s);
                     if (s.getLastUpdated() > lLastUpdate){

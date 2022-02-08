@@ -246,7 +246,7 @@ public class ModelFirebase {
                     Log.d("TAG", e.getMessage());
                 });
     }
-    public void getAllReviews(Long since, Model.GetAllReviewsListener listener) {
+    public void getAllReviews(long since, Model.GetAllReviewsListener listener) {
         db.collection("reviews")
                 .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -256,6 +256,7 @@ public class ModelFirebase {
                 if(task.isSuccessful()){
                     for (QueryDocumentSnapshot doc: task.getResult()){
                         Review s = Review.fromJson(doc.getData());
+                        Log.d("TAG", "onComplete: "+s.getReview());
                         if (s != null) {
                             ReviewList.add(s);
                         }
