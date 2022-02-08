@@ -1,19 +1,33 @@
 package com.example.mypizza.Model;
 
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldValue;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+import com.example.mypizza.MyApplication;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Entity
 public class Review {
     final static String REVIEW = "review";
     final static String WRITEREMAIL = "writerEmail";
     final static String PIZZAID = "pizzaID";
+    final static String REVIEWUPDATE = "REVIEW_LAST_UPDATE";
+    final static String LAST_UPDATED = "LAST_UPDATE";
 
+    @PrimaryKey
+    @NonNull
     private String review;
     private String writerEmail;
     private String pizzaID;
+    Long lastUpdated = new Long(0);
+    private String ReviewID;
 
 
     public Review(String review,String writer,String pizza){
@@ -21,6 +35,8 @@ public class Review {
         this.writerEmail = writer;
         this.pizzaID = pizza;
     }
+
+    public Review(){}
 
     public String getPizzaID() {
         return pizzaID;
@@ -46,6 +62,15 @@ public class Review {
         this.writerEmail = writerEmail;
     }
 
+    public Long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
         json.put(REVIEW, getReview());
@@ -55,6 +80,7 @@ public class Review {
     }
 
     static Review fromJson(Map<String,Object> json){
+        Log.d("TAG8","R from J");
         String review = (String)json.get(REVIEW);
         if (review == null){
             return null;
@@ -65,4 +91,27 @@ public class Review {
         return r;
     }
 
+    static Long getLocalLastUpdated(){
+        Log.d("TAG3", "setLocalLastUpdated: "+ MyApplication.getContext());
+        Long localLastUpdate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                .getLong(REVIEWUPDATE,0);
+        return localLastUpdate;
+    }
+
+    static void setLocalLastUpdated(Long date){
+        Log.d("TAG3", "setLocalLastUpdated: "+MyApplication.getContext());
+        SharedPreferences.Editor editor = MyApplication.getContext()
+                .getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
+        editor.putLong(REVIEWUPDATE,date);
+        editor.commit();
+        Log.d("TAG", "new lud " + date);
+    }
+
+    public String getReviewID() {
+        return ReviewID;
+    }
+
+    public void setReviewID(String reviewID) {
+        ReviewID = reviewID;
+    }
 }

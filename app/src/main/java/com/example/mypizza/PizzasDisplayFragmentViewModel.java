@@ -9,7 +9,7 @@ import com.example.mypizza.Model.Pizza;
 import java.util.List;
 
 public class PizzasDisplayFragmentViewModel extends ViewModel {
-    LiveData<List<Pizza>> data = Model.instance.getAll();
+    LiveData<List<Pizza>> data = Model.instance.getAllPizzas();
 
     public LiveData<List<Pizza>> getData(){return data;}
 }

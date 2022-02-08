@@ -99,6 +99,7 @@ public class write_review_fragment extends Fragment {
             @Override
             public void onComplete() {
                 Log.d("TAG", "onComplete: Review saved");
+
             }
         });
 

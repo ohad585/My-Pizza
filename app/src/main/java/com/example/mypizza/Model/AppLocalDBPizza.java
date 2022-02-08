@@ -8,16 +8,17 @@ import androidx.room.RoomDatabase;
 import com.example.mypizza.MyApplication;
 
 @Database(entities = {Pizza.class}, version = 1)
-abstract class AppLocalDbRepository extends RoomDatabase {
+abstract class AppLocalDbRepositoryPizza extends RoomDatabase {
     public abstract PizzaDao pizzaDao();
+
 }
 
-public class AppLocalDB {
-    static public final AppLocalDbRepository db =
+public class AppLocalDBPizza {
+    static public final AppLocalDbRepositoryPizza db =
             Room.databaseBuilder(MyApplication.getContext(),
-                    AppLocalDbRepository.class,
+                    AppLocalDbRepositoryPizza.class,
                     "pizzas.db")
                     .fallbackToDestructiveMigration()
                     .build();
-    private AppLocalDB(){}
+    private AppLocalDBPizza(){}
 }

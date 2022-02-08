@@ -16,6 +16,9 @@ public class Model {
     MutableLiveData<List<Pizza>> pizzasListLd = new MutableLiveData<>();
     MutableLiveData<LoadingState> pizzaListLoadingState = new MutableLiveData<LoadingState>();
 
+    MutableLiveData<List<Review>> reviewsListLd = new MutableLiveData<>();
+    MutableLiveData<LoadingState> reviewsListLoadingState = new MutableLiveData<LoadingState>();
+
 
 
     public enum LoadingState{
@@ -26,6 +29,8 @@ public class Model {
     private Model(){
         pizzaListLoadingState.setValue(LoadingState.loaded);
         reloadPizzasList();
+        reviewsListLoadingState.setValue(LoadingState.loaded);
+        reloadReviewsList();
     }
 
 
@@ -34,14 +39,23 @@ public class Model {
     public LiveData<LoadingState> getPizzaListLoadingState(){
         return pizzaListLoadingState;
     }
+    public LiveData<LoadingState> getReviewListLoadingState(){
+        return reviewsListLoadingState;
+    }
 
-    public LiveData<List<Pizza>> getAll() {return pizzasListLd;
+
+    public LiveData<List<Pizza>> getAllPizzas() {return pizzasListLd;
+    }
+
+    public LiveData<List<Review>> getAllReviews() {return reviewsListLd;
     }
 
     public interface GetAllPizzasListener{
         void onComplete(List<Pizza> data);
     }
-
+    public interface GetAllReviewsListener{
+        void onComplete(List<Review> data);
+    }
     public void reloadPizzasList(){
         pizzaListLoadingState.setValue(LoadingState.loading);
         //1. get local last update
@@ -55,7 +69,7 @@ public class Model {
                 Long lLastUpdate = new Long(0);
                 Log.d("TAG", "FB returned " + list.size());
                 for(Pizza s : list){
-                    AppLocalDB.db.pizzaDao().insertAll(s);
+                    AppLocalDBPizza.db.pizzaDao().insertAll(s);
                     if (s.getLastUpdated() > lLastUpdate){
                         lLastUpdate = s.getLastUpdated();
                     }
@@ -63,9 +77,34 @@ public class Model {
                 Pizza.setLocalLastUpdated(lLastUpdate);
 
                 //5. return all records to the caller
-                List<Pizza> stList = AppLocalDB.db.pizzaDao().getAll();
+                List<Pizza> stList = AppLocalDBPizza.db.pizzaDao().getAll();
                 pizzasListLd.postValue(stList);
                 pizzaListLoadingState.postValue(LoadingState.loaded);
+            });
+        });
+    }
+
+    public void reloadReviewsList(){
+        reviewsListLoadingState.setValue(LoadingState.loading);
+        //1. get local last update
+        Long localLastUpdate = Review.getLocalLastUpdated();
+        Log.d("TAG","review localLastUpdate: " + localLastUpdate);
+        modelFirebase.getAllReviews(localLastUpdate,(list)->{
+            MyApplication.executorService.execute(()->{
+                Long lLastUpdate = new Long(0);
+                Log.d("TAG", "FB returned " + list.size());
+                for(Review s : list){
+                    AppLocalDBReview.db.reviewDao().insertAll(s);
+                    if (s.getLastUpdated() > lLastUpdate){
+                        lLastUpdate = s.getLastUpdated();
+                    }
+                }
+                Review.setLocalLastUpdated(lLastUpdate);
+
+                //5. return all records to the caller
+                List<Review> stList = AppLocalDBReview.db.reviewDao().getAll();
+                reviewsListLd.postValue(stList);
+                reviewsListLoadingState.postValue(LoadingState.loaded);
             });
         });
     }

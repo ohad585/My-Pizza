@@ -246,4 +246,31 @@ public class ModelFirebase {
                     Log.d("TAG", e.getMessage());
                 });
     }
+    public void getAllReviews(Long since, Model.GetAllReviewsListener listener) {
+        db.collection("reviews")
+                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Review> ReviewList = new LinkedList<Review>();
+                if(task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc: task.getResult()){
+                        Review s = Review.fromJson(doc.getData());
+                        if (s != null) {
+                            ReviewList.add(s);
+                        }
+                    }
+                }else{
+
+                }
+                listener.onComplete(ReviewList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
+
+    }
 }
