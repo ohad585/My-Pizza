@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 public class personal_page_manager_fragment extends Fragment {
     Button addPizzaBtn;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

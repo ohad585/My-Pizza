@@ -29,10 +29,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 public class ModelFirebase {
-    FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public ModelFirebase(){
+
+    public ModelFirebase() {
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .build();
@@ -42,10 +43,10 @@ public class ModelFirebase {
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
                 .document(user.getEmail()).set(user.toJson())
-                .addOnSuccessListener((successListener)-> {
+                .addOnSuccessListener((successListener) -> {
                     listener.onComplete(true);
                 })
-                .addOnFailureListener((e)-> {
+                .addOnFailureListener((e) -> {
                     listener.onComplete(false);
                 });
     }
@@ -96,8 +97,9 @@ public class ModelFirebase {
             }
         });
     }
-    public void reg(String email,String password,Model.RegistrationByMailPassListener listener){
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+    public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -109,7 +111,8 @@ public class ModelFirebase {
         });
 
     }
-    public void signInWithEmail(String email,String password ,Model.SignInWithEmailPassListener listener ){
+
+    public void signInWithEmail(String email, String password, Model.SignInWithEmailPassListener listener) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -121,20 +124,20 @@ public class ModelFirebase {
                             getUserByEmail(user.getEmail(), new Model.GetUserByUserNameListener() {
                                 @Override
                                 public void onComplete(User u) {
-                                    listener.onComplete(u,true);
+                                    listener.onComplete(u, true);
                                 }
                             });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithEmail:failure", task.getException());
-                            listener.onComplete(null,false);
+                            listener.onComplete(null, false);
                         }
                     }
                 });
     }
 
 
-    public void saveImage(Bitmap bitmap, String description,Model.SaveImageListener listener) {
+    public void saveImage(Bitmap bitmap, String description, Model.SaveImageListener listener) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imageRef = storageRef.child("pizza/" + description + ".jpg");
@@ -153,12 +156,12 @@ public class ModelFirebase {
     }
 
     public void getPizzaByID(String id, Model.GetPizzaByIDListener listener) {
-        Log.d("TAG", "getPizzaByID: "+id);
+        Log.d("TAG", "getPizzaByID: " + id);
         DocumentReference docRef = db.collection("pizzas").document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Pizza pz = Pizza.fromJson(document.getData());
@@ -172,7 +175,7 @@ public class ModelFirebase {
     }
 
     public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
-        db.collection("pizzas").whereEqualTo("description",description)
+        db.collection("pizzas").whereEqualTo("description", description)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -186,44 +189,44 @@ public class ModelFirebase {
                             listener.onComplete(null);
                         }
                     }
-                }else listener.onComplete(null);
+                } else listener.onComplete(null);
             }
         });
     }
 
 
-    public void addPizza(Pizza p, Model.AddPizzaListener listener,Model.AddPizzaListener listener2) {
+    public void addPizza(Pizza p, Model.AddPizzaListener listener, Model.AddPizzaListener listener2) {
         db.collection("pizzas")
                 .add(p.toJson())
-                .addOnSuccessListener((successListener)-> {
-                    listener.onComplete(true,successListener.getId().toString());
-                    listener2.onComplete(false,null);
+                .addOnSuccessListener((successListener) -> {
+                    listener.onComplete(true, successListener.getId().toString());
+                    listener2.onComplete(false, null);
                 })
-                .addOnFailureListener((e)-> {
+                .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
                 });
     }
 
-    public void getCurrentUser(Model.getCurrentUserListener listener){
+    public void getCurrentUser(Model.getCurrentUserListener listener) {
         FirebaseUser user = mAuth.getCurrentUser();
         listener.onComplete(new User(user));
     }
 
-    public void getAllPizzas(long since,Model.GetAllPizzasListener listener){
+    public void getAllPizzas(long since, Model.GetAllPizzasListener listener) {
         db.collection("pizzas")
-                .whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED,new Timestamp(since, 0))
+                .whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED, new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 LinkedList<Pizza> pizzasList = new LinkedList<Pizza>();
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc: task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         Pizza s = Pizza.fromJson(doc.getData());
                         if (s != null) {
                             pizzasList.add(s);
                         }
                     }
-                }else{
+                } else {
 
                 }
                 listener.onComplete(pizzasList);
@@ -239,29 +242,30 @@ public class ModelFirebase {
     public void addReview(Review r, Model.AddReviewListener listener) {
         db.collection("reviews")
                 .add(r.toJson())
-                .addOnSuccessListener((successListener)-> {
+                .addOnSuccessListener((successListener) -> {
                     listener.onComplete();
                 })
-                .addOnFailureListener((e)-> {
+                .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
                 });
     }
+
     public void getAllReviews(long since, Model.GetAllReviewsListener listener) {
         db.collection("reviews")
-                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
+//                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 LinkedList<Review> ReviewList = new LinkedList<Review>();
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc: task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
-                        Log.d("TAG", "onComplete: "+s.getReview());
+                        Log.d("TAG", "onComplete: " + s.getReview());
                         if (s != null) {
                             ReviewList.add(s);
                         }
                     }
-                }else{
+                } else {
 
                 }
                 listener.onComplete(ReviewList);
@@ -272,6 +276,54 @@ public class ModelFirebase {
                 listener.onComplete(null);
             }
         });
+    }
 
+    public void getReviewByID(String reviewID, Model.getReviewByIDListener listener) {
+        db.collection("review").whereEqualTo("reviewID", reviewID)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            //if sucess return the pizza
+                            Review r = Review.fromJson(document.getData());
+                            listener.onComplete(r);
+                        } else {
+                            listener.onComplete(null);
+                        }
+                    }
+                } else listener.onComplete(null);
+            }
+        });
+
+    }
+
+
+    public void getAllReviewsByWriterMail(String writerMail, Model.GetAllReviewsForUserListener listener) {
+        db.collection("reviews").whereEqualTo("writerEmail", writerMail)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                LinkedList<Review> ReviewList = new LinkedList<Review>();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        Review s = Review.fromJson(doc.getData());
+                        Log.d("TAG", "onComplete: " + s.getReview());
+                        if (s != null) {
+                            ReviewList.add(s);
+                        }
+                    }
+                } else {
+
+                }
+                listener.onComplete(ReviewList);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        });
     }
 }

@@ -19,58 +19,75 @@ public class Model {
     MutableLiveData<List<Review>> reviewsListLd = new MutableLiveData<>();
     MutableLiveData<LoadingState> reviewsListLoadingState = new MutableLiveData<LoadingState>();
 
+    MutableLiveData<List<Review>> reviewsListForUserLd = new MutableLiveData<>();
+    MutableLiveData<LoadingState> reviewsListForUserLoadingState = new MutableLiveData<LoadingState>();
 
 
-    public enum LoadingState{
+    public enum LoadingState {
         loading,
         loaded
     }
 
-    private Model(){
+    private Model() {
         pizzaListLoadingState.setValue(LoadingState.loaded);
         reloadPizzasList();
         reviewsListLoadingState.setValue(LoadingState.loaded);
         reloadReviewsList();
+        reviewsListForUserLoadingState.setValue(LoadingState.loaded);
     }
 
 
-
-
-    public LiveData<LoadingState> getPizzaListLoadingState(){
+    public LiveData<LoadingState> getPizzaListLoadingState() {
         return pizzaListLoadingState;
     }
-    public LiveData<LoadingState> getReviewListLoadingState(){
+
+    public LiveData<LoadingState> getReviewListLoadingState() {
         return reviewsListLoadingState;
     }
 
-
-    public LiveData<List<Pizza>> getAllPizzas() {return pizzasListLd;
+    public LiveData<LoadingState> getReviewListForUserLoadingState() {
+        return reviewsListForUserLoadingState;
     }
 
-    public LiveData<List<Review>> getAllReviews() {return reviewsListLd;
+    public LiveData<List<Pizza>> getAllPizzas() {
+        return pizzasListLd;
     }
 
-    public interface GetAllPizzasListener{
+    public LiveData<List<Review>> getAllReviews() {
+        return reviewsListLd;
+    }
+
+    public LiveData<List<Review>> getAllReviewsForUser() {
+        return reviewsListForUserLd;
+    }
+
+    public interface GetAllPizzasListener {
         void onComplete(List<Pizza> data);
     }
-    public interface GetAllReviewsListener{
+
+    public interface GetAllReviewsListener {
         void onComplete(List<Review> data);
     }
-    public void reloadPizzasList(){
+
+    public interface GetAllReviewsForUserListener {
+        void onComplete(List<Review> data);
+    }
+
+    public void reloadPizzasList() {
         pizzaListLoadingState.setValue(LoadingState.loading);
         //1. get local last update
         Long localLastUpdate = Pizza.getLocalLastUpdated();
-        Log.d("TAG","localLastUpdate: " + localLastUpdate);
+        Log.d("TAG", "localLastUpdate: " + localLastUpdate);
         //2. get all students record since local last update from firebase
-        modelFirebase.getAllPizzas(localLastUpdate,(list)->{
-            MyApplication.executorService.execute(()->{
+        modelFirebase.getAllPizzas(localLastUpdate, (list) -> {
+            MyApplication.executorService.execute(() -> {
                 //3. update local last update date
                 //4. add new records to the local db
                 Long lLastUpdate = new Long(0);
                 Log.d("TAG", "pizzas returned " + list.size());
-                for(Pizza s : list){
+                for (Pizza s : list) {
                     AppLocalDBPizza.db.pizzaDao().insertAll(s);
-                    if (s.getLastUpdated() > lLastUpdate){
+                    if (s.getLastUpdated() > lLastUpdate) {
                         lLastUpdate = s.getLastUpdated();
                     }
                 }
@@ -84,18 +101,18 @@ public class Model {
         });
     }
 
-    public void reloadReviewsList(){
+    public void reloadReviewsList() {
         reviewsListLoadingState.setValue(LoadingState.loading);
         //1. get local last update
         Long localLastUpdate = Review.getLocalLastUpdated();
-        Log.d("TAG","review localLastUpdate: " + localLastUpdate);
-        modelFirebase.getAllReviews(localLastUpdate,(list)->{
-            MyApplication.executorService.execute(()->{
+        Log.d("TAG", "review localLastUpdate: " + localLastUpdate);
+        modelFirebase.getAllReviews(localLastUpdate, (list) -> {
+            MyApplication.executorService.execute(() -> {
                 Long lLastUpdate = new Long(0);
                 Log.d("TAG", "reviews returned " + list.size());
-                for(Review s : list){
+                for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
-                    if (s.getLastUpdated() > lLastUpdate){
+                    if (s.getLastUpdated() > lLastUpdate) {
                         lLastUpdate = s.getLastUpdated();
                     }
                 }
@@ -109,7 +126,25 @@ public class Model {
         });
     }
 
-    public interface AddUserListener{
+    public void reloadReviewsListByMail(String writerMail) {
+        reviewsListForUserLoadingState.setValue(LoadingState.loading);
+        modelFirebase.getAllReviewsByWriterMail(writerMail,(list) -> {
+            MyApplication.executorService.execute(() -> {
+                Log.d("TAG", "reviews returned " + list.size());
+                for (Review s : list) {
+                    AppLocalDBReview.db.reviewDao().insertAll(s);
+                }
+
+                //5. return all records to the caller
+                List<Review> stList =  AppLocalDBReview.db.reviewDao().getReviewByMail(writerMail);
+                reviewsListForUserLd.postValue(stList);
+                reviewsListForUserLoadingState.postValue(LoadingState.loaded);
+            });
+        });
+    }
+
+
+    public interface AddUserListener {
         void onComplete(boolean flag);
     }
 
@@ -117,25 +152,24 @@ public class Model {
         getUserByEmail(user.getEmail(), new GetUserByUserNameListener() {
             @Override
             public void onComplete(User u) {
-                if (u==null){
+                if (u == null) {
                     modelFirebase.addUser(user, listener);
-                }
-                else{
+                } else {
                     listener.onComplete(false);
                 }
             }
         });
     }
 
-    public interface GetUserByUserNameListener{
+    public interface GetUserByUserNameListener {
         void onComplete(User u);
     }
 
-
-    public void getUserByEmail(String email,GetUserByUserNameListener listener) {
+    public void getUserByEmail(String email, GetUserByUserNameListener listener) {
         modelFirebase.getUserByEmail(email, listener);
     }
-    public interface checkLogInListener{
+
+    public interface checkLogInListener {
         void onComplete(User u);
     }
 //    public void checkUser(String name, String pass,checkLogInListener listener) {
@@ -143,37 +177,51 @@ public class Model {
 //
 //    }
 
-    public interface RegistrationByMailPassListener{
+    public interface RegistrationByMailPassListener {
         void onComplete(String uid);
     }
 
-    public void regModel(String email,String pass,RegistrationByMailPassListener listener){
+    public void regModel(String email, String pass, RegistrationByMailPassListener listener) {
         modelFirebase.reg(email, pass, listener);
     }
-    public interface SignInWithEmailPassListener{
+
+    public interface SignInWithEmailPassListener {
         void onComplete(User user, boolean success);
     }
-    public void signInWithEmailPass(String email,String password,SignInWithEmailPassListener listener){
-        modelFirebase.signInWithEmail(email,password,listener);
+
+    public void signInWithEmailPass(String email, String password, SignInWithEmailPassListener listener) {
+        modelFirebase.signInWithEmail(email, password, listener);
     }
 
-    public interface SaveImageListener{
+    public interface SaveImageListener {
         void onComplete(String url);
     }
-    public void saveImage(Bitmap bitmap,String description,SaveImageListener listener) {
-        modelFirebase.saveImage(bitmap,description,listener);
+
+    public void saveImage(Bitmap bitmap, String description, SaveImageListener listener) {
+        modelFirebase.saveImage(bitmap, description, listener);
     }
-    public interface AddPizzaListener{
-        void onComplete(boolean flag,String uid);
+
+    public interface AddPizzaListener {
+        void onComplete(boolean flag, String uid);
     }
-    public interface GetPizzaByDescriptionListener{
+
+    public interface GetPizzaByDescriptionListener {
         void onComplete(Pizza p);
     }
 
-    public void getPizzaByDescription(String description,GetPizzaByDescriptionListener listener) {
-        modelFirebase.getPizzaByDescription(description, listener);
+    public void getReviewByID(String reviewID, getReviewByIDListener listener) {
+        modelFirebase.getReviewByID(reviewID, listener);
     }
 
+    public interface getReviewByIDListener {
+        void onComplete(Review r);
+    }
+    public interface getReviewByMailListener {
+        void onComplete(Review r);
+    }
+    public void getPizzaByDescription(String description, GetPizzaByDescriptionListener listener) {
+        modelFirebase.getPizzaByDescription(description, listener);
+    }
 
     public void addPizza(Pizza pizza, AddPizzaListener listener) {
         modelFirebase.addPizza(pizza, listener, new AddPizzaListener() {
@@ -184,24 +232,28 @@ public class Model {
         });
     }
 
-    public interface getCurrentUserListener{
+    public interface getCurrentUserListener {
         void onComplete(User user);
     }
-    public void getCurrentUser(getCurrentUserListener listener){
+
+    public void getCurrentUser(getCurrentUserListener listener) {
         modelFirebase.getCurrentUser(listener);
     }
 
     public interface GetPizzaByIDListener {
         void onComplete(Pizza pizza);
     }
-    public void getPizzaById(String id,GetPizzaByIDListener listener){
-        modelFirebase.getPizzaByID(id,listener);
+
+    public void getPizzaById(String id, GetPizzaByIDListener listener) {
+        modelFirebase.getPizzaByID(id, listener);
     }
 
-    public interface AddReviewListener{
+    public interface AddReviewListener {
         void onComplete();
     }
+
     public void addReview(Review r, AddReviewListener listener) {
-        modelFirebase.addReview(r,listener);
+        modelFirebase.addReview(r, listener);
     }
+
 }

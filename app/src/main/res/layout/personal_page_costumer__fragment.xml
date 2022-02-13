@@ -39,20 +39,31 @@
         app:layout_constraintBottom_toBottomOf="@+id/personal_page_costumer_emailLabel_tv"
         app:layout_constraintStart_toEndOf="@+id/personal_page_costumer_emailLabel_tv" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/personal_page_costumer_reviewList"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/personal_page_costumer_swiperefresh"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/personal_page_costumer_myReview_tv"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/personal_page_costumer_myReview_tv">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/personal_page_costumer_reviewList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/personal_page_costumer_myReview_tv"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/personal_page_costumer_img"

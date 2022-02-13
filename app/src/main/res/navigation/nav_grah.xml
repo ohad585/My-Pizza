@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/watch_all_reviews_manager_fragment">
+    app:startDestination="@id/personal_page_costumer_fragment">
 
     <fragment
         android:id="@+id/login_page_fragment"
@@ -57,7 +57,11 @@
         android:id="@+id/personal_page_costumer_fragment"
         android:name="com.example.mypizza.personal_page_costumer_fragment"
         android:label="personal page"
-        tools:layout="@layout/personal_page_costumer__fragment" />
+        tools:layout="@layout/personal_page_costumer__fragment" >
+        <action
+            android:id="@+id/action_personal_page_costumer_fragment_to_edit_review_fragment"
+            app:destination="@id/edit_review_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/personal_page_manager_fragment"
         android:name="com.example.mypizza.personal_page_manager_fragment"
@@ -95,7 +99,11 @@
         android:id="@+id/watch_all_reviews_manager_fragment"
         android:name="com.example.mypizza.watch_all_reviews_manager_fragment"
         android:label="all reviews"
-        tools:layout="@layout/watch_all_reviews_manager" />
+        tools:layout="@layout/watch_all_reviews_manager" >
+        <action
+            android:id="@+id/action_watch_all_reviews_manager_fragment_to_edit_review_fragment"
+            app:destination="@id/edit_review_fragment" />
+    </fragment>
     <fragment
         android:id="@+id/home_page_fragment2"
         android:name="com.example.mypizza.home_page_fragment"
@@ -108,5 +116,14 @@
         <action
             android:id="@+id/action_home_page_fragment2_to_registration_page_fragment"
             app:destination="@id/registration_page_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/edit_review_fragment"
+        android:name="com.example.mypizza.edit_review_fragment"
+        android:label="edit review"
+        tools:layout="@layout/edit_review_fragment" >
+        <argument
+            android:name="review_ID"
+            app:argType="string" />
     </fragment>
 </navigation>

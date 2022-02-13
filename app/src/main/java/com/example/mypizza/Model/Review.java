@@ -83,7 +83,6 @@ public class Review {
     }
 
     static Review fromJson(Map<String,Object> json){
-        Log.d("TAG8","R from J");
         String review = (String)json.get(REVIEW);
         if (review == null){
             return null;

@@ -18,4 +18,7 @@ public interface ReviewDao {
     @Delete
     void delete(Review review);
 
+    @Query("SELECT * FROM Review WHERE writerEmail=:email ")
+    List<Review>  getReviewByMail(String email);
+
 }
