@@ -23,6 +23,7 @@ public class Model {
     MutableLiveData<LoadingState> reviewsListForUserLoadingState = new MutableLiveData<LoadingState>();
 
 
+
     public enum LoadingState {
         loading,
         loaded
@@ -216,9 +217,7 @@ public class Model {
     public interface getReviewByIDListener {
         void onComplete(Review r);
     }
-    public interface getReviewByMailListener {
-        void onComplete(Review r);
-    }
+
     public void getPizzaByDescription(String description, GetPizzaByDescriptionListener listener) {
         modelFirebase.getPizzaByDescription(description, listener);
     }
@@ -255,5 +254,13 @@ public class Model {
     public void addReview(Review r, AddReviewListener listener) {
         modelFirebase.addReview(r, listener);
     }
+    public interface UpdateReviewListener {
+        void onComplete(Review r);
+    }
+    public void updateReview(Review review,UpdateReviewListener listener) {
+        modelFirebase.updateReview(review, listener);
+
+    }
+
 
 }

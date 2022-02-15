@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
@@ -240,8 +241,7 @@ public class ModelFirebase {
     }
 
     public void addReview(Review r, Model.AddReviewListener listener) {
-        db.collection("reviews")
-                .add(r.toJson())
+        db.collection("reviews").document(r.getReviewID()).set(r.toJson())
                 .addOnSuccessListener((successListener) -> {
                     listener.onComplete();
                 })
@@ -260,7 +260,6 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
-                        Log.d("TAG", "onComplete: " + s.getReview());
                         if (s != null) {
                             ReviewList.add(s);
                         }
@@ -279,25 +278,25 @@ public class ModelFirebase {
     }
 
     public void getReviewByID(String reviewID, Model.getReviewByIDListener listener) {
-        db.collection("review").whereEqualTo("reviewID", reviewID)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+            DocumentReference docRef = db.collection("reviews").document(reviewID);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            //if sucess return the pizza
-                            Review r = Review.fromJson(document.getData());
-                            listener.onComplete(r);
+                            Review s = Review.fromJson(document.getData());
+                            listener.onComplete(s);
                         } else {
                             listener.onComplete(null);
                         }
+                    } else {
+                        Log.d("TAG", "get failed with ", task.getException());
+                        listener.onComplete(null);
                     }
-                } else listener.onComplete(null);
-            }
-        });
-
-    }
+                }
+            });
+        }
 
 
     public void getAllReviewsByWriterMail(String writerMail, Model.GetAllReviewsForUserListener listener) {
@@ -325,5 +324,21 @@ public class ModelFirebase {
                 listener.onComplete(null);
             }
         });
+    }
+
+    public void updateReview(Review review, Model.UpdateReviewListener listener) {
+        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
+        docRef.update("review", review.getReview()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("TAG", "DocumentSnapshot successfully updated!");
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", "Error updating document", e);
+                    }
+            });
     }
 }

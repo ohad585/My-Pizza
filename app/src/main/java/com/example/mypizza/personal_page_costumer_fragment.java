@@ -73,7 +73,7 @@ public class personal_page_costumer_fragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Model.instance.reloadReviewsListByMail("zBLf1ZDFD4god9LYHoKltIDPShm1");
+                Model.instance.reloadReviewsListByMail("IcdSO4tqVre2CsZjwciQq5aGHpu2");
             }
         });
 
@@ -106,6 +106,7 @@ public class personal_page_costumer_fragment extends Fragment {
     private void refreshData(){
         Log.d("TAG", "refreshData: watch reviews");
     }
+
     interface OnItemClickListener {
         void onItemClick(int position, View v);
     }

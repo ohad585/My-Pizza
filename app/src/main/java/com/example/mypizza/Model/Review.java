@@ -22,6 +22,8 @@ public class Review {
     final static String PIZZAID = "pizzaID";
     final static String REVIEWUPDATE = "REVIEW_LAST_UPDATE";
     final static String LAST_UPDATED = "LAST_UPDATE";
+    final static String REVIEW_ID = "REVIEW_ID";
+
 
     @PrimaryKey
     @NonNull
@@ -36,6 +38,7 @@ public class Review {
         this.review=review;
         this.writerEmail = writer;
         this.pizzaID = pizza;
+        this.ReviewID=review+writerEmail+pizza;
     }
 
     public Review(){}
@@ -79,6 +82,8 @@ public class Review {
         json.put(WRITEREMAIL, getWriterEmail());
         json.put(PIZZAID,getPizzaID());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
+        json.put(REVIEW_ID,getReviewID());
+
         return json;
     }
 
@@ -89,6 +94,7 @@ public class Review {
         }
         String writerE = (String)json.get(WRITEREMAIL);
         String pizzaID = (String)json.get(PIZZAID);
+        String ReviewID = (String)json.get(REVIEW_ID);
         Timestamp ts =(Timestamp)json.get(LAST_UPDATED);
         Review r = new Review(review,writerE,pizzaID);
         r.setLastUpdated(new Long(ts.getSeconds()));

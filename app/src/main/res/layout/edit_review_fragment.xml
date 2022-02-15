@@ -107,8 +107,20 @@
         android:layout_marginTop="28dp"
         app:layout_constraintBottom_toTopOf="@+id/edit_review_delete_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_review_review_et"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/addphoto" />
+
+    <ProgressBar
+        android:id="@+id/edit_review_progBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="177dp"
+        android:layout_height="265dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
