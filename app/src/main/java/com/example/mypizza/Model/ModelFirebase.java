@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -306,8 +307,8 @@ public class ModelFirebase {
 
 
     public void getAllReviewsByWriterMail(long since,String writerMail, Model.GetAllReviewsForUserListener listener) {
-        db.collection("reviews").whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED, new Timestamp(since, 0))
-                .whereEqualTo("writerEmail", writerMail)
+        db.collection("reviews")
+               .whereGreaterThanOrEqualTo(Review.LAST_UPDATED, new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -317,7 +318,7 @@ public class ModelFirebase {
                         Review s = Review.fromJson(doc.getData());
                         s.setReviewID(doc.getId());
                         Log.d("TAG", "onComplete: " + s.getReview());
-                        if (s != null && !s.isDeleted()) {
+                        if (s != null && !s.isDeleted() && s.getWriterEmail()==writerMail) {
                             ReviewList.add(s);
                         }
                     }
@@ -336,7 +337,8 @@ public class ModelFirebase {
 
     public void updateReview(Review review, Model.UpdateReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update("review", review.getReview()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.update("review",review.getReview(),"LAST_UPDATE", FieldValue.serverTimestamp())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "DocumentSnapshot successfully updated!");
@@ -352,7 +354,7 @@ public class ModelFirebase {
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update("IS_DELETED", review.isDeleted()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.update("IS_DELETED", review.isDeleted(),"LAST_UPDATE", FieldValue.serverTimestamp()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "DocumentSnapshot successfully deleted!");

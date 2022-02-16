@@ -61,12 +61,7 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 
                     return true;
-                case R.id.menu_log_in:
-                    navCtrl.navigate(R.id.login_page_fragment);
-                    return true;
-                case R.id.menu_registration:
-                    navCtrl.navigate(R.id.registration_page_fragment);
-                    return true;
+
                 case android.R.id.home:
                     navCtrl.navigateUp();
                 default:
