@@ -52,10 +52,24 @@ public class edit_review_fragment extends Fragment {
                 save();
             }
         });
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                delete();
+            }
+        });
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigateUp();
+            }
+        });
         progBar.setVisibility(View.VISIBLE);
 
         return view;
     }
+
+
 
     private void updateDisplay(Review review) {
         this.review = review;
@@ -77,6 +91,15 @@ public class edit_review_fragment extends Fragment {
         Model.instance.updateReview(review, new Model.UpdateReviewListener() {
             @Override
             public void onComplete(Review r) {
+                Navigation.findNavController(view).navigateUp();
+                Model.instance.reloadReviewsListByMail(review.getWriterEmail());
+            }
+        });
+    }
+    private void delete() {
+        Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
+            @Override
+            public void onComplete() {
                 Navigation.findNavController(view).navigateUp();
                 Model.instance.reloadReviewsListByMail(review.getWriterEmail());
             }

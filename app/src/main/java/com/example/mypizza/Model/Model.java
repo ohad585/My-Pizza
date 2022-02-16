@@ -261,6 +261,13 @@ public class Model {
         modelFirebase.updateReview(review, listener);
 
     }
+    public interface DeleteReviewListener {
+        void onComplete();
+    }
 
+    public void deleteReview(Review review, DeleteReviewListener listener) {
+        modelFirebase.deleteReview(review, listener);
+
+    }
 
 }

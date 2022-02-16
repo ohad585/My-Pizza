@@ -332,6 +332,7 @@ public class ModelFirebase {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "DocumentSnapshot successfully updated!");
+                listener.onComplete(review);
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -340,5 +341,21 @@ public class ModelFirebase {
                         Log.d("TAG", "Error updating document", e);
                     }
             });
+    }
+    public void deleteReview(Review review, Model.DeleteReviewListener listener) {
+        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
+        docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.d("TAG", "DocumentSnapshot successfully remove!");
+                listener.onComplete();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", "Error deleting document", e);
+                    }
+                });
     }
 }

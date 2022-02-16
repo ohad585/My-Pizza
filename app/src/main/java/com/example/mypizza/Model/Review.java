@@ -38,7 +38,7 @@ public class Review {
         this.review=review;
         this.writerEmail = writer;
         this.pizzaID = pizza;
-        this.ReviewID=review+writerEmail+pizza;
+        this.ReviewID=writerEmail+pizza;
     }
 
     public Review(){}
