@@ -3,12 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-<<<<<<< HEAD
-    app:startDestination="@id/pizzas_display_fragment">
-=======
-    app:startDestination="@id/watch_all_reviews_manager_fragment">
->>>>>>> b89d6f92c11e237b990068563c1f605c079531c1
-
+    app:startDestination="@id/personal_page_costumer_fragment">
     <fragment
         android:id="@+id/login_page_fragment"
         android:name="com.example.mypizza.login_page_fragment"

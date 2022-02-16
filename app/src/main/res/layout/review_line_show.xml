@@ -31,32 +31,16 @@
         android:id="@+id/review_line_show_emailUser_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="user e-mail:"
-<<<<<<< HEAD
-        android:textSize="18dp"
-        app:layout_constraintEnd_toStartOf="@+id/review_line_show_edit_img"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/review_line_show_review_tv"
-=======
-        app:layout_constraintStart_toEndOf="@+id/review_line_show_img"
->>>>>>> edit
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="@+id/review_line_show_img" />
     <TextView
         android:id="@+id/review_line_show_emailAdd_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-<<<<<<< HEAD
         android:layout_marginStart="8dp"
-=======
->>>>>>> edit
         android:text="liron@gmail.com"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/review_line_show_emailUser_tv"
-<<<<<<< HEAD
-        app:layout_constraintEnd_toStartOf="@+id/review_line_show_edit_img"
-=======
->>>>>>> edit
         app:layout_constraintStart_toEndOf="@+id/review_line_show_emailUser_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

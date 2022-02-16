@@ -158,10 +158,10 @@ public class pizza_details_fragment extends Fragment {
             reviewText = itemView.findViewById(R.id.review_line_show_review_tv);
             writerEmail = itemView.findViewById(R.id.review_line_show_emailAdd_tv);
             pizzaImg = itemView.findViewById(R.id.review_line_show_img);
-            ImageView editImg = itemView.findViewById(R.id.review_line_show_edit_img);
-            editImg.setVisibility(View.INVISIBLE);
-            ImageView binImg = itemView.findViewById(R.id.review_line_show_bin_img);
-            binImg.setVisibility(View.INVISIBLE);
+            //ImageView editImg = itemView.findViewById(R.id.review_line_show_edit_img);
+            //editImg.setVisibility(View.INVISIBLE);
+            //ImageView binImg = itemView.findViewById(R.id.review_line_show_bin_img);
+            //binImg.setVisibility(View.INVISIBLE);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
