@@ -4,7 +4,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.mypizza.MyApplication;
-@Database(entities = {Review.class}, version = 1)
+@Database(entities = {Review.class}, version =5)
 abstract class AppLocalDbRepositoryReview extends RoomDatabase {
     public abstract ReviewDao reviewDao();
 }

@@ -241,9 +241,11 @@ public class ModelFirebase {
     }
 
     public void addReview(Review r, Model.AddReviewListener listener) {
-        db.collection("reviews").document(r.getReviewID()).set(r.toJson())
+        db.collection("reviews").add(r.toJson())
                 .addOnSuccessListener((successListener) -> {
-                    listener.onComplete();
+                    r.setReviewID(successListener.getId());
+                    String reviewID=successListener.getId();
+                    listener.onComplete(reviewID);
                 })
                 .addOnFailureListener((e) -> {
                     Log.d("TAG", e.getMessage());
@@ -252,7 +254,7 @@ public class ModelFirebase {
 
     public void getAllReviews(long since, Model.GetAllReviewsListener listener) {
         db.collection("reviews")
-//                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
+                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -260,7 +262,8 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
-                        if (s != null) {
+                        s.setReviewID(doc.getId());
+                        if (s != null && !s.isDeleted()) {
                             ReviewList.add(s);
                         }
                     }
@@ -278,6 +281,7 @@ public class ModelFirebase {
     }
 
     public void getReviewByID(String reviewID, Model.getReviewByIDListener listener) {
+            Log.d("TAG","review Id is:"+reviewID);
             DocumentReference docRef = db.collection("reviews").document(reviewID);
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -286,8 +290,10 @@ public class ModelFirebase {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Review s = Review.fromJson(document.getData());
+                            Log.d("TAG","liron review Id is: "+document.getId());;
                             listener.onComplete(s);
                         } else {
+
                             listener.onComplete(null);
                         }
                     } else {
@@ -299,8 +305,9 @@ public class ModelFirebase {
         }
 
 
-    public void getAllReviewsByWriterMail(String writerMail, Model.GetAllReviewsForUserListener listener) {
-        db.collection("reviews").whereEqualTo("writerEmail", writerMail)
+    public void getAllReviewsByWriterMail(long since,String writerMail, Model.GetAllReviewsForUserListener listener) {
+        db.collection("reviews").whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED, new Timestamp(since, 0))
+                .whereEqualTo("writerEmail", writerMail)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -308,8 +315,9 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
+                        s.setReviewID(doc.getId());
                         Log.d("TAG", "onComplete: " + s.getReview());
-                        if (s != null) {
+                        if (s != null && !s.isDeleted()) {
                             ReviewList.add(s);
                         }
                     }
@@ -344,10 +352,10 @@ public class ModelFirebase {
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.update("IS_DELETED", review.isDeleted()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.d("TAG", "DocumentSnapshot successfully remove!");
+                Log.d("TAG", "DocumentSnapshot successfully deleted!");
                 listener.onComplete();
             }
         })
