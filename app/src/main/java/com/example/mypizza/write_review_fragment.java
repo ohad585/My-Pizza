@@ -93,7 +93,7 @@ public class write_review_fragment extends Fragment {
 
     void save(){
         String rev = review.getText().toString();
-        Review r = new Review(rev,u.getUid(),p.getDescription());
+        Review r = new Review(rev,u.getEmail(),p.getDescription());
         Log.d("TAG", "save: "+rev+" user:"+u.getEmail());
         Model.instance.addReview(r, new Model.AddReviewListener() {
             @Override
