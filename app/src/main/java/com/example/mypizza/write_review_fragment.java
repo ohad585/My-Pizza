@@ -97,9 +97,9 @@ public class write_review_fragment extends Fragment {
         Log.d("TAG", "save: "+rev+" user:"+u.getEmail());
         Model.instance.addReview(r, new Model.AddReviewListener() {
             @Override
-            public void onComplete() {
+            public void onComplete( String reviewID) {
                 Log.d("TAG", "onComplete: Review saved");
-
+                r.setReviewID(reviewID);
             }
         });
 

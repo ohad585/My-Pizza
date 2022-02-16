@@ -22,6 +22,7 @@ public class Pizza {
     final static String PRICE = "price";
     final static String PIZZASUPDATE = "PIZZAS_LAST_UPDATE";
     final static String LAST_UPDATED = "LAST_UPDATE";
+    final static String IS_DELETED="IS_DELETED";
 
     @PrimaryKey
     @NonNull
@@ -29,6 +30,7 @@ public class Pizza {
     private String uid;
     private String price;
     private String imgUrl;
+    private boolean isDeleted;
     Long lastUpdated = new Long(0);
 
 
@@ -39,6 +41,7 @@ public class Pizza {
         description=d;
         uid="";
         imgUrl="";
+        isDeleted=false;
     }
 
     public void setLastUpdated(Long lastUpdated) {
@@ -87,6 +90,7 @@ public class Pizza {
         json.put(PRICE, getPrice());
         json.put(DESC, getDescription());
         json.put(IMGURL,getImgUrl());
+        //json.put(IS_DELETED,isDeleted());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return json;
     }
@@ -99,8 +103,10 @@ public class Pizza {
         String price = (String)json.get(PRICE);
         String imgUrl = (String)json.get(IMGURL);
         Timestamp ts =(Timestamp)json.get(LAST_UPDATED);
+        //boolean isDeleted= (boolean)json.get(IS_DELETED);
         Pizza pizza = new Pizza(price,description);
         pizza.setImgUrl(imgUrl);
+        //pizza.setDeleted(isDeleted);
         pizza.setLastUpdated(new Long(ts.getSeconds()));
         return pizza;
     }
@@ -120,4 +126,11 @@ public class Pizza {
         Log.d("TAG", "new lud " + date);
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }

@@ -21,32 +21,11 @@
         android:layout_width="0dp"
         android:layout_height="73dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="32dp"
         android:text="The pizza was very tasty!\nrecommended!!!"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/review_line_show_edit_img"
-        app:layout_constraintHorizontal_bias="0.431"
         app:layout_constraintStart_toEndOf="@+id/review_line_show_img"
         app:layout_constraintTop_toBottomOf="@+id/review_line_show_emailUser_tv" />
-
-    <ImageView
-        android:id="@+id/review_line_show_edit_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
-
-    <ImageView
-        android:id="@+id/review_line_show_bin_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/review_line_show_edit_img"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
 
     <TextView
         android:id="@+id/review_line_show_emailUser_tv"
@@ -54,20 +33,30 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="user e-mail:"
+<<<<<<< HEAD
         android:textSize="18dp"
         app:layout_constraintEnd_toStartOf="@+id/review_line_show_edit_img"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/review_line_show_review_tv"
+=======
+        app:layout_constraintStart_toEndOf="@+id/review_line_show_img"
+>>>>>>> edit
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/review_line_show_emailAdd_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:layout_marginStart="8dp"
+=======
+>>>>>>> edit
         android:text="liron@gmail.com"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/review_line_show_emailUser_tv"
+<<<<<<< HEAD
         app:layout_constraintEnd_toStartOf="@+id/review_line_show_edit_img"
+=======
+>>>>>>> edit
         app:layout_constraintStart_toEndOf="@+id/review_line_show_emailUser_tv" />
 </androidx.constraintlayout.widget.ConstraintLayout>

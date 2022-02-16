@@ -44,6 +44,7 @@ public class edit_review_fragment extends Fragment {
         progBar=view.findViewById(R.id.edit_review_progBar);
         String reviewID = edit_review_fragmentArgs.fromBundle(getArguments()).getReviewID();
         Model.instance.getReviewByID(reviewID, (review)->{
+            review.setReviewID(reviewID);
             updateDisplay(review);
         });
         save_btn.setOnClickListener(new View.OnClickListener() {
@@ -72,17 +73,21 @@ public class edit_review_fragment extends Fragment {
 
 
     private void updateDisplay(Review review) {
-        this.review = review;
-        email_et.setText(review.getWriterEmail());
-        email_et.setEnabled(false);
-        review_et.setText(review.getReview());
+        if(review!=null){
+            this.review = review;
+            email_et.setText(review.getWriterEmail());
+            email_et.setEnabled(false);
+            review_et.setText(review.getReview());
+            progBar.setVisibility(View.GONE);
+
+        }
+
 //        if (review.getAvatarUtl() != null) {
 //            Picasso.get()
 //                    .load(review.getAvatarUtl())
 //                    .placeholder(R.drawable.avatar)
 //                    .into(img_btn);
 //        }
-        progBar.setVisibility(View.GONE);
     }
 
     private void save(){
@@ -95,8 +100,10 @@ public class edit_review_fragment extends Fragment {
                 Model.instance.reloadReviewsListByMail(review.getWriterEmail());
             }
         });
+
     }
     private void delete() {
+        review.setDeleted(true);
         Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
             @Override
             public void onComplete() {
