@@ -155,7 +155,9 @@ public class personal_page_costumer_fragment extends Fragment {
             @Override
             public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
                 Review review = viewModel.getData().getValue().get(position);
-                holder.bind(review);
+                if(review.isDeleted()==false) {
+                    holder.bind(review);
+                }
             }
 
 

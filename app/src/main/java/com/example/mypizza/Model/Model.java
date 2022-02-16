@@ -7,7 +7,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mypizza.MyApplication;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Model {
@@ -110,7 +113,6 @@ public class Model {
         modelFirebase.getAllReviews(localLastUpdate, (list) -> {
             MyApplication.executorService.execute(() -> {
                 Long lLastUpdate = new Long(0);
-                Log.d("TAG", "reviews returned " + list.size());
                 for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
                     if (s.getLastUpdated() > lLastUpdate) {
@@ -118,7 +120,6 @@ public class Model {
                     }
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
-
                 //5. return all records to the caller
                 List<Review> stList = AppLocalDBReview.db.reviewDao().getAll();
                 reviewsListLd.postValue(stList);
@@ -129,13 +130,17 @@ public class Model {
 
     public void reloadReviewsListByMail(String writerMail) {
         reviewsListForUserLoadingState.setValue(LoadingState.loading);
-        modelFirebase.getAllReviewsByWriterMail(writerMail,(list) -> {
+        Long localLastUpdate = Review.getLocalLastUpdated();
+        modelFirebase.getAllReviewsByWriterMail(localLastUpdate,writerMail,(list) -> {
             MyApplication.executorService.execute(() -> {
-                Log.d("TAG", "reviews returned " + list.size());
+                Long lLastUpdate = new Long(0);
                 for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
+                    if (s.getLastUpdated() > lLastUpdate) {
+                        lLastUpdate = s.getLastUpdated();
+                    }
                 }
-
+                Review.setLocalLastUpdated(lLastUpdate);
                 //5. return all records to the caller
                 List<Review> stList =  AppLocalDBReview.db.reviewDao().getReviewByMail(writerMail);
                 reviewsListForUserLd.postValue(stList);
@@ -248,7 +253,7 @@ public class Model {
     }
 
     public interface AddReviewListener {
-        void onComplete();
+        void onComplete( String reviewID);
     }
 
     public void addReview(Review r, AddReviewListener listener) {
@@ -259,8 +264,14 @@ public class Model {
     }
     public void updateReview(Review review,UpdateReviewListener listener) {
         modelFirebase.updateReview(review, listener);
-
+    }
+    public interface DeleteReviewListener {
+        void onComplete();
     }
 
+    public void deleteReview(Review review, DeleteReviewListener listener) {
+        modelFirebase.deleteReview(review, listener);
+
+    }
 
 }

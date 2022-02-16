@@ -10,10 +10,4 @@
     <item
         android:id="@+id/menu_pizzas_menu"
         android:title="pizza's menu" />
-    <item
-        android:id="@+id/menu_log_in"
-        android:title="log in" />
-    <item
-        android:id="@+id/menu_registration"
-        android:title="registration" />
 </menu>

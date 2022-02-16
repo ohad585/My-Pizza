@@ -4,7 +4,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.example.mypizza.MyApplication;
+<<<<<<< HEAD
 @Database(entities = {Review.class}, version = 2)
+=======
+@Database(entities = {Review.class}, version =7)
+>>>>>>> edit
 abstract class AppLocalDbRepositoryReview extends RoomDatabase {
     public abstract ReviewDao reviewDao();
 }

@@ -22,23 +22,29 @@ public class Review {
     final static String PIZZAID = "pizzaID";
     final static String REVIEWUPDATE = "REVIEW_LAST_UPDATE";
     final static String LAST_UPDATED = "LAST_UPDATE";
-    final static String REVIEW_ID = "REVIEW_ID";
+    //final static String REVIEW_ID = "REVIEW_ID";
+    final static String IS_DELETED="IS_DELETED";
+
 
 
     @PrimaryKey
     @NonNull
+    private String ReviewID;
     private String review;
     private String writerEmail;
     private String pizzaID;
     Long lastUpdated = new Long(0);
-    private String ReviewID;
+    private boolean isDeleted;
+
 
 
     public Review(String review,String writer,String pizza){
         this.review=review;
         this.writerEmail = writer;
         this.pizzaID = pizza;
-        this.ReviewID=review+writerEmail+pizza;
+        //this.ReviewID=writerEmail+pizza;
+        isDeleted=false;
+
     }
 
     public Review(){}
@@ -82,7 +88,9 @@ public class Review {
         json.put(WRITEREMAIL, getWriterEmail());
         json.put(PIZZAID,getPizzaID());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
-        json.put(REVIEW_ID,getReviewID());
+        //json.put(REVIEW_ID,getReviewID());
+        json.put(IS_DELETED,isDeleted());
+
 
         return json;
     }
@@ -92,12 +100,14 @@ public class Review {
         if (review == null){
             return null;
         }
+        boolean isDeleted= (boolean)json.get(IS_DELETED);
         String writerE = (String)json.get(WRITEREMAIL);
         String pizzaID = (String)json.get(PIZZAID);
-        String ReviewID = (String)json.get(REVIEW_ID);
+        //String ReviewID = (String)json.get(REVIEW_ID);
         Timestamp ts =(Timestamp)json.get(LAST_UPDATED);
         Review r = new Review(review,writerE,pizzaID);
         r.setLastUpdated(new Long(ts.getSeconds()));
+        r.setDeleted(isDeleted);
         return r;
     }
 
@@ -123,5 +133,13 @@ public class Review {
 
     public void setReviewID(String reviewID) {
         ReviewID = reviewID;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
