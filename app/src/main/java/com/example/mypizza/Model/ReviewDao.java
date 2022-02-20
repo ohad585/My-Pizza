@@ -21,4 +21,7 @@ public interface ReviewDao {
     @Query("SELECT * FROM Review WHERE writerEmail=:email ")
     List<Review>  getReviewByMail(String email);
 
+    @Query("UPDATE Review SET isDeleted = :isDel WHERE ReviewID =:id")
+    void logicDelete(Boolean isDel, String id);
+
 }

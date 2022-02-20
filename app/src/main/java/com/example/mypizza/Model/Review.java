@@ -49,6 +49,18 @@ public class Review {
 
     public Review(){}
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "ReviewID='" + ReviewID + '\'' +
+                ", review='" + review + '\'' +
+                ", writerEmail='" + writerEmail + '\'' +
+                ", pizzaID='" + pizzaID + '\'' +
+                ", lastUpdated=" + lastUpdated +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
+
     public String getPizzaID() {
         return pizzaID;
     }
@@ -112,14 +124,12 @@ public class Review {
     }
 
     static Long getLocalLastUpdated(){
-        Log.d("TAG3", "setLocalLastUpdated: "+ MyApplication.getContext());
         Long localLastUpdate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
                 .getLong(REVIEWUPDATE,0);
         return localLastUpdate;
     }
 
     static void setLocalLastUpdated(Long date){
-        Log.d("TAG3", "setLocalLastUpdated: "+MyApplication.getContext());
         SharedPreferences.Editor editor = MyApplication.getContext()
                 .getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
         editor.putLong(REVIEWUPDATE,date);

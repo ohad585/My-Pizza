@@ -263,6 +263,7 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
+                        Log.d("TAG", s.toString());
                         s.setReviewID(doc.getId());
                         if (s != null && !s.isDeleted()) {
                             ReviewList.add(s);

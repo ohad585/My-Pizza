@@ -81,7 +81,7 @@ public class Model {
         pizzaListLoadingState.setValue(LoadingState.loading);
         //1. get local last update
         Long localLastUpdate = Pizza.getLocalLastUpdated();
-        Log.d("TAG", "localLastUpdate: " + localLastUpdate);
+        Log.d("TAG", "Reload pizzas localLastUpdate: " + localLastUpdate);
         //2. get all students record since local last update from firebase
         modelFirebase.getAllPizzas(localLastUpdate, (list) -> {
             MyApplication.executorService.execute(() -> {
@@ -99,6 +99,7 @@ public class Model {
 
                 //5. return all records to the caller
                 List<Pizza> stList = AppLocalDBPizza.db.pizzaDao().getAll();
+
                 pizzasListLd.postValue(stList);
                 pizzaListLoadingState.postValue(LoadingState.loaded);
             });
@@ -115,13 +116,20 @@ public class Model {
                 Long lLastUpdate = new Long(0);
                 for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
+                    Log.d("TAG", "reloadReviewsList: local db updated");
                     if (s.getLastUpdated() > lLastUpdate) {
                         lLastUpdate = s.getLastUpdated();
                     }
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
                 //5. return all records to the caller
-                List<Review> stList = AppLocalDBReview.db.reviewDao().getAll();
+                List<Review> stList = new LinkedList<>();
+                for(Review s : AppLocalDBReview.db.reviewDao().getAll()){
+                    if(!s.isDeleted()) {
+                        Log.d("TAG", "Review not deleted "+s.getReview() + s.isDeleted());
+                        stList.add(s);
+                    }
+                }
                 reviewsListLd.postValue(stList);
                 reviewsListLoadingState.postValue(LoadingState.loaded);
             });
@@ -142,7 +150,11 @@ public class Model {
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
                 //5. return all records to the caller
-                List<Review> stList =  AppLocalDBReview.db.reviewDao().getReviewByMail(writerMail);
+                List<Review> stList = new LinkedList<>();
+                for(Review s : AppLocalDBReview.db.reviewDao().getReviewByMail(writerMail)) {
+                    if (!s.isDeleted())
+                        stList.add(s);
+                }
                 reviewsListForUserLd.postValue(stList);
                 reviewsListForUserLoadingState.postValue(LoadingState.loaded);
             });
@@ -271,7 +283,10 @@ public class Model {
 
     public void deleteReview(Review review, DeleteReviewListener listener) {
         modelFirebase.deleteReview(review, listener);
-
+        MyApplication.executorService.execute(()->{
+            AppLocalDBReview.db.reviewDao().logicDelete(true,review.getReviewID());
+        });
+        reloadReviewsList();
     }
 
 }

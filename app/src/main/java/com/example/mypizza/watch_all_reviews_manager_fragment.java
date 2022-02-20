@@ -23,6 +23,7 @@ import com.example.mypizza.Model.Model;
 import com.example.mypizza.Model.Pizza;
 import com.example.mypizza.Model.Review;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class watch_all_reviews_manager_fragment extends Fragment {
@@ -31,6 +32,8 @@ public class watch_all_reviews_manager_fragment extends Fragment {
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     View progBar;
+    List<Review> allReviewsList = new LinkedList<>();
+
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -64,8 +67,9 @@ public class watch_all_reviews_manager_fragment extends Fragment {
         viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Review>>() {
             @Override
             public void onChanged(List<Review> reviews) {
+                allReviewsList = reviews ;
+                Log.d("TAG", "onChanged: Review list updated");
                 adapter.notifyDataSetChanged();
-                Log.d("TAG6", viewModel.getData().getValue().toString());
             }
 
         });
@@ -74,7 +78,7 @@ public class watch_all_reviews_manager_fragment extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 progBar.setVisibility(View.VISIBLE);
-                Review re = viewModel.getData().getValue().get(position);
+                Review re = allReviewsList.get(position);
                 watch_all_reviews_manager_fragmentDirections.ActionWatchAllReviewsManagerFragmentToEditReviewFragment action=watch_all_reviews_manager_fragmentDirections.actionWatchAllReviewsManagerFragmentToEditReviewFragment(re.getReviewID());
                 Navigation.findNavController(view).navigate(action);
                 Log.d("TAG", "review is clicked: "+re.getReviewID());
@@ -89,6 +93,7 @@ public class watch_all_reviews_manager_fragment extends Fragment {
     }
     private void refreshData() {
         Log.d("TAG", "refreshData: watch reviews");
+        allReviewsList = viewModel.getData().getValue();
     }
 
     interface OnItemClickListener{
@@ -110,9 +115,6 @@ public class watch_all_reviews_manager_fragment extends Fragment {
             reviewText = itemView.findViewById(R.id.review_line_show_review_tv);
             writerEmail = itemView.findViewById(R.id.review_line_show_emailAdd_tv);
             pizzaImg = itemView.findViewById(R.id.review_line_show_img);
-            //check if its needed
-//            editImg = itemView.findViewById(R.id.review_line_show_edit_img);
-//            binImg = itemView.findViewById(R.id.review_line_show_bin_img);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -149,16 +151,15 @@ public class watch_all_reviews_manager_fragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Review review = viewModel.getData().getValue().get(position);
-//            Log.d("TAG liron", viewModel.getData().getValue().toString() );
+            Review review = allReviewsList.get(position);
             holder.bind(review);
         }
 
 
         @Override
         public int getItemCount() {
-            if (viewModel.getData().getValue() == null) return 0;
-            return viewModel.getData().getValue().size();
+            if (allReviewsList == null) return 0;
+            return allReviewsList.size();
         }
 
 

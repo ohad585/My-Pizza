@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.mypizza.MyApplication;
 
-@Database(entities = {Pizza.class}, version = 3)
+@Database(entities = {Pizza.class}, version = 4)
 abstract class AppLocalDbRepositoryPizza extends RoomDatabase {
     public abstract PizzaDao pizzaDao();
 
