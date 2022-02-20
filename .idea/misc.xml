@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/activity_main.xml" value="0.24818840579710144" />
+        <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/add_pizza_fragment.xml" value="0.264" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/fragment_login_page_fragment.xml" value="0.125" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/fragment_personal_page_manager_fragment.xml" value="0.1" />
         <entry key="..\:/Ohad/Android/MyPizza/app/src/main/res/layout/login_page_fragment.xml" value="0.125" />
@@ -36,7 +37,7 @@
         <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/layout/review_line_show.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/layout/watch_all_reviews_manager.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/layout/write_review.xml" value="0.264" />
-        <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/menu/base_menu.xml" value="0.264" />
+        <entry key="..\:/Users/liron/Desktop/myPizza/My-Pizza/app/src/main/res/menu/base_menu.xml" value="0.536" />
       </map>
     </option>
   </component>

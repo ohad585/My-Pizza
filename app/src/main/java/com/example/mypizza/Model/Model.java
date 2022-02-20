@@ -219,6 +219,18 @@ public class Model {
         modelFirebase.saveImage(bitmap, description, listener);
     }
 
+    public void saveReviewImg(Bitmap bitmap, String reviewId, SaveImageListener listener){
+        modelFirebase.saveImageReview(bitmap,reviewId,listener);
+    }
+
+    public interface UpdateReviewUrlListener{
+        void onComplete();
+    }
+
+    public void updateReviewUrl(Review r,String url,UpdateReviewUrlListener listener){
+        modelFirebase.updateReviewUrl(r,url,listener);
+    }
+
     public interface AddPizzaListener {
         void onComplete(boolean flag, String uid);
     }

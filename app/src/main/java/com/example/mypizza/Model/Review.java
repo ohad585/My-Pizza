@@ -24,6 +24,7 @@ public class Review {
     final static String LAST_UPDATED = "LAST_UPDATE";
     //final static String REVIEW_ID = "REVIEW_ID";
     final static String IS_DELETED="IS_DELETED";
+    final static String IMGURL = "imgUrl";
 
 
 
@@ -35,6 +36,7 @@ public class Review {
     private String pizzaID;
     Long lastUpdated = new Long(0);
     private boolean isDeleted;
+    private String imgUrl;
 
 
 
@@ -44,7 +46,7 @@ public class Review {
         this.pizzaID = pizza;
         //this.ReviewID=writerEmail+pizza;
         isDeleted=false;
-
+        imgUrl = "";
     }
 
     public Review(){}
@@ -71,6 +73,14 @@ public class Review {
 
     public String getWriterEmail() {
         return writerEmail;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public void setPizzaID(String pizzaID) {
@@ -102,6 +112,7 @@ public class Review {
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         //json.put(REVIEW_ID,getReviewID());
         json.put(IS_DELETED,isDeleted());
+        json.put(IMGURL,getImgUrl());
 
 
         return json;
@@ -112,14 +123,15 @@ public class Review {
         if (review == null){
             return null;
         }
+        String imgUrl = (String)json.get(IMGURL);
         boolean isDeleted= (boolean)json.get(IS_DELETED);
         String writerE = (String)json.get(WRITEREMAIL);
         String pizzaID = (String)json.get(PIZZAID);
-        //String ReviewID = (String)json.get(REVIEW_ID);
         Timestamp ts =(Timestamp)json.get(LAST_UPDATED);
         Review r = new Review(review,writerE,pizzaID);
         r.setLastUpdated(new Long(ts.getSeconds()));
         r.setDeleted(isDeleted);
+        r.setImgUrl(imgUrl);
         return r;
     }
 

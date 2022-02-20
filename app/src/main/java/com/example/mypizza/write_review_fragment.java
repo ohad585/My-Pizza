@@ -1,15 +1,22 @@
 package com.example.mypizza;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +28,9 @@ import com.squareup.picasso.Picasso;
 
 public class write_review_fragment extends Fragment {
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    final static int RESAULT_SUCCESS = 0;
+
     View view;
     TextView tops;
     TextView price;
@@ -29,6 +39,9 @@ public class write_review_fragment extends Fragment {
     View progBar;
     Button saveBtn;
     Button cnclBtn;
+    ImageButton addReviewPhoto;
+
+    Bitmap bitmap;
 
     Pizza p;
     User u;
@@ -42,6 +55,7 @@ public class write_review_fragment extends Fragment {
         price = view.findViewById(R.id.write_review_actual_price_tv);
         review = view.findViewById(R.id.write_review_et);
         img = view.findViewById(R.id.write_review_img);
+        addReviewPhoto = view.findViewById(R.id.write_review_pizza_img_btn);
         progBar = view.findViewById(R.id.write_review_progBar);
         progBar.setVisibility(View.VISIBLE);
 
@@ -73,8 +87,24 @@ public class write_review_fragment extends Fragment {
                 Navigation.findNavController(view).navigate(action);
             }
         });
+        addReviewPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {//img was taken and return to code
+            Bundle bundle = data.getExtras();
+            bitmap = (Bitmap) bundle.get("data");
+        }
     }
 
     void update(){
@@ -91,7 +121,12 @@ public class write_review_fragment extends Fragment {
         progBar.setVisibility(View.INVISIBLE);
     }
 
+
     void save(){
+        if(bitmap == null){
+            //Please add pizza photo first
+            return;
+        }
         String rev = review.getText().toString();
         Review r = new Review(rev,u.getEmail(),p.getDescription());
         Log.d("TAG", "save: "+rev+" user:"+u.getEmail());
@@ -100,6 +135,18 @@ public class write_review_fragment extends Fragment {
             public void onComplete( String reviewID) {
                 Log.d("TAG", "onComplete: Review saved");
                 r.setReviewID(reviewID);
+                Model.instance.saveReviewImg(bitmap, r.getReviewID(), new Model.SaveImageListener() {
+                    @Override
+                    public void onComplete(String url) {
+                        r.setImgUrl(url);
+                        Model.instance.updateReviewUrl(r, url, new Model.UpdateReviewUrlListener() {
+                            @Override
+                            public void onComplete() {
+                                Navigation.findNavController(view).navigate(R.id.action_write_review_fragment_to_pizza_details_fragment);
+                            }
+                        });
+                    }
+                });
             }
         });
 

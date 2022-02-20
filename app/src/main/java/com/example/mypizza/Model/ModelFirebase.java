@@ -178,6 +178,23 @@ public class ModelFirebase {
                             listener.onComplete(downloadUrl.toString());
                         }));
     }
+    public void saveImageReview(Bitmap bitmap, String reviewId, Model.SaveImageListener listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imageRef = storageRef.child("reviews/" + reviewId + ".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> listener.onComplete(null))//failure
+                .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()//success
+                        .addOnSuccessListener(uri -> {
+                            Uri downloadUrl = uri;
+                            listener.onComplete(downloadUrl.toString());
+                        }));
+    }
 
     public void getPizzaByID(String id, Model.GetPizzaByIDListener listener) {
         Log.d("TAG", "getPizzaByID: " + id);
@@ -390,6 +407,23 @@ public class ModelFirebase {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("TAG", "Error deleting document", e);
+                    }
+                });
+    }
+    public void updateReviewUrl(Review review,String url, Model.UpdateReviewUrlListener listener) {
+        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
+        docRef.update("imgUrl",review.getImgUrl(),"LAST_UPDATE", FieldValue.serverTimestamp())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("TAG", "DocumentSnapshot successfully updated!");
+                        listener.onComplete();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", "Error updating document", e);
                     }
                 });
     }
