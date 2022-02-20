@@ -20,21 +20,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mypizza.Model.Model;
+import com.example.mypizza.Model.Pizza;
 import com.example.mypizza.Model.Review;
 import com.example.mypizza.Model.User;
 
 import org.w3c.dom.Text;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class personal_page_costumer_fragment extends Fragment {
     View view;
+    Review r;
     View progBar;
     TextView email;
     costumerReviewViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     User currentUser;
+    List<Review> reviewList = new LinkedList<>();
+
 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -58,6 +63,7 @@ public class personal_page_costumer_fragment extends Fragment {
                 currentUser=user;
             }
         });
+
         return view;
     }
 
@@ -73,7 +79,7 @@ public class personal_page_costumer_fragment extends Fragment {
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Model.instance.reloadReviewsListByMail("IcdSO4tqVre2CsZjwciQq5aGHpu2");
+                Model.instance.reloadReviewsListByMail(currentUser.getEmail());
             }
         });
 
@@ -103,6 +109,7 @@ public class personal_page_costumer_fragment extends Fragment {
                 swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading));
 
     }
+
     private void refreshData(){
         Log.d("TAG", "refreshData: watch reviews");
     }

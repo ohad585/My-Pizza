@@ -60,6 +60,11 @@ public class User {
 
     public boolean isAdmin() { return admin; }
 
+    public void setAdmin(boolean Admin) {
+       this.admin=Admin;
+    }
+
+
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();

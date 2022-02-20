@@ -100,7 +100,29 @@ public class ModelFirebase {
         });
     }
 
-    public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
+//    public interface getAdminData {
+//        void onComplete(boolean isAdmin);
+//    }
+    public void checkUserAdmin(User user) {
+        DocumentReference docRef = db.collection("users").document(user.getEmail());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User u = User.fromJson(document.getData());
+                        user.setAdmin(u.isAdmin());
+                    }
+                } else {
+                    Log.d("TAG1234", "get failed with ", task.getException());
+                }
+
+            }
+        });
+    }
+
+        public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -210,8 +232,13 @@ public class ModelFirebase {
     }
 
     public void getCurrentUser(Model.getCurrentUserListener listener) {
+       //getAdminData listener1 = null;
         FirebaseUser user = mAuth.getCurrentUser();
-        listener.onComplete(new User(user));
+        User usr=new User();
+        usr.setEmail(user.getEmail());
+        usr.setUid(user.getUid());
+        checkUserAdmin(usr);
+        listener.onComplete(usr);
     }
 
     public void getAllPizzas(long since, Model.GetAllPizzasListener listener) {
@@ -263,7 +290,6 @@ public class ModelFirebase {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
-                        Log.d("TAG", s.toString());
                         s.setReviewID(doc.getId());
                         if (s != null && !s.isDeleted()) {
                             ReviewList.add(s);
@@ -292,7 +318,6 @@ public class ModelFirebase {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Review s = Review.fromJson(document.getData());
-                            Log.d("TAG","liron review Id is: "+document.getId());;
                             listener.onComplete(s);
                         } else {
 
@@ -318,7 +343,6 @@ public class ModelFirebase {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
                         s.setReviewID(doc.getId());
-                        Log.d("TAG", "onComplete: " + s.getReview());
                         if (s != null && !s.isDeleted() && s.getWriterEmail()==writerMail) {
                             ReviewList.add(s);
                         }

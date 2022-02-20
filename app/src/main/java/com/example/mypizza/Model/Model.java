@@ -276,7 +276,12 @@ public class Model {
     }
     public void updateReview(Review review,UpdateReviewListener listener) {
         modelFirebase.updateReview(review, listener);
+        MyApplication.executorService.execute(()->{
+            AppLocalDBReview.db.reviewDao().UpdateLocal(review.getReview(),review.getReviewID());
+        });
+        reloadReviewsList();
     }
+
     public interface DeleteReviewListener {
         void onComplete();
     }

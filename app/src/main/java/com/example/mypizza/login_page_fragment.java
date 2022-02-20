@@ -53,7 +53,13 @@ public class login_page_fragment extends Fragment {
             if(success){
                 progBar.setVisibility(View.INVISIBLE);
                 Log.d("TAG", "loginUser: "+user.getEmail()+" "+user.getUid());
-                Navigation.findNavController(view).navigate(R.id.action_login_page_fragment_to_personal_page_costumer_fragment);
+                if(user.isAdmin()==false){
+                    Navigation.findNavController(view).navigate(R.id.action_login_page_fragment_to_personal_page_costumer_fragment);
+                }
+                else{
+                    Navigation.findNavController(view).navigate(R.id.action_login_page_fragment_to_personal_page_manager_fragment);
+
+                }
             }
             else {
                 progBar.setVisibility(View.INVISIBLE);
