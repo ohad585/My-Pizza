@@ -15,6 +15,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -100,7 +101,7 @@ public class ModelFirebase {
         });
     }
 
-//    public interface getAdminData {
+    //    public interface getAdminData {
 //        void onComplete(boolean isAdmin);
 //    }
     public void checkUserAdmin(User user) {
@@ -122,7 +123,7 @@ public class ModelFirebase {
         });
     }
 
-        public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
+    public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -249,7 +250,7 @@ public class ModelFirebase {
     }
 
     public void getCurrentUser(Model.getCurrentUserListener listener) {
-       //getAdminData listener1 = null;
+        //getAdminData listener1 = null;
         FirebaseUser user = mAuth.getCurrentUser();
         User usr=new User();
         usr.setEmail(user.getEmail());
@@ -326,32 +327,32 @@ public class ModelFirebase {
     }
 
     public void getReviewByID(String reviewID, Model.getReviewByIDListener listener) {
-            Log.d("TAG","review Id is:"+reviewID);
-            DocumentReference docRef = db.collection("reviews").document(reviewID);
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            Review s = Review.fromJson(document.getData());
-                            listener.onComplete(s);
-                        } else {
-
-                            listener.onComplete(null);
-                        }
+        Log.d("TAG","review Id is:"+reviewID);
+        DocumentReference docRef = db.collection("reviews").document(reviewID);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Review s = Review.fromJson(document.getData());
+                        listener.onComplete(s);
                     } else {
-                        Log.d("TAG", "get failed with ", task.getException());
+
                         listener.onComplete(null);
                     }
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                    listener.onComplete(null);
                 }
-            });
-        }
+            }
+        });
+    }
 
 
     public void getAllReviewsByWriterMail(long since,String writerMail, Model.GetAllReviewsForUserListener listener) {
         db.collection("reviews")
-               .whereGreaterThanOrEqualTo(Review.LAST_UPDATED, new Timestamp(since, 0))
+                .whereGreaterThanOrEqualTo(Review.LAST_UPDATED, new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -381,18 +382,18 @@ public class ModelFirebase {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
         docRef.update("review",review.getReview(),"LAST_UPDATE", FieldValue.serverTimestamp())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                Log.d("TAG", "DocumentSnapshot successfully updated!");
-                listener.onComplete(review);
-            }
-        })
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("TAG", "DocumentSnapshot successfully updated!");
+                        listener.onComplete(review);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("TAG", "Error updating document", e);
                     }
-            });
+                });
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
@@ -427,4 +428,21 @@ public class ModelFirebase {
                     }
                 });
     }
-}
+
+    public void UpdateReviewImg(Bitmap bitmap, String reviewId, Model.SaveImageListener listener) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference imageRef = storageRef.child("reviews/" + reviewId + ".jpg");
+            imageRef.delete();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = imageRef.putBytes(data);
+            uploadTask.addOnFailureListener(exception -> listener.onComplete(null))//failure
+                    .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()//success
+                            .addOnSuccessListener(uri -> {
+                                Uri downloadUrl = uri;
+                                listener.onComplete(downloadUrl.toString());
+                            }));
+        }
+    }

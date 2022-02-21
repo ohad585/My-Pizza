@@ -70,7 +70,7 @@
         android:id="@+id/edit_review_delete_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="44dp"
         android:text="delete"
         app:layout_constraintBottom_toBottomOf="@+id/edit_review_save_btn"
         app:layout_constraintEnd_toStartOf="@+id/edit_review_cancel_btn"
@@ -100,18 +100,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/edit_review_img"
-        android:layout_width="186dp"
-        android:layout_height="160dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="240dp"
+        android:layout_height="199dp"
         app:layout_constraintBottom_toTopOf="@+id/edit_review_delete_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_review_review_et"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/addphoto" />
+        app:layout_constraintVertical_bias="0.735"
+        app:srcCompat="@drawable/addphoto"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <ProgressBar
         android:id="@+id/edit_review_progBar"
@@ -120,7 +119,9 @@
         android:layout_height="265dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.439" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

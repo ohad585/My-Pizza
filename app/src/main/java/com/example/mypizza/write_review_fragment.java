@@ -40,7 +40,6 @@ public class write_review_fragment extends Fragment {
     Button saveBtn;
     Button cnclBtn;
     ImageButton addReviewPhoto;
-
     Bitmap bitmap;
 
     Pizza p;

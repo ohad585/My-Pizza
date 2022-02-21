@@ -27,6 +27,7 @@ public class Model {
 
 
 
+
     public enum LoadingState {
         loading,
         loaded
@@ -223,6 +224,7 @@ public class Model {
         modelFirebase.saveImageReview(bitmap,reviewId,listener);
     }
 
+
     public interface UpdateReviewUrlListener{
         void onComplete();
     }
@@ -304,6 +306,10 @@ public class Model {
             AppLocalDBReview.db.reviewDao().logicDelete(true,review.getReviewID());
         });
         reloadReviewsList();
+    }
+
+    public void UpdateReviewImg(Bitmap bitmap, String reviewId, SaveImageListener listener){
+        modelFirebase.UpdateReviewImg(bitmap,reviewId,listener);
     }
 
 }
