@@ -151,17 +151,14 @@ public class pizza_details_fragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView reviewText;
         TextView writerEmail;
-        ImageView pizzaImg;
+        ImageView reviewImg;
 
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             reviewText = itemView.findViewById(R.id.review_line_show_review_tv);
             writerEmail = itemView.findViewById(R.id.review_line_show_emailAdd_tv);
-            pizzaImg = itemView.findViewById(R.id.review_line_show_img);
-            //ImageView editImg = itemView.findViewById(R.id.review_line_show_edit_img);
-            //editImg.setVisibility(View.INVISIBLE);
-            //ImageView binImg = itemView.findViewById(R.id.review_line_show_bin_img);
-            //binImg.setVisibility(View.INVISIBLE);
+            reviewImg = itemView.findViewById(R.id.review_line_show_img);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -176,6 +173,14 @@ public class pizza_details_fragment extends Fragment {
         public void bind(Review r) {
             reviewText.setText(r.getReview());
             writerEmail.setText(r.getWriterEmail());
+            String url = r.getImgUrl();
+            if(url != null)
+            {
+                Picasso.get()
+                        .load(url)
+                        .placeholder(R.drawable.avatar)
+                        .into(reviewImg);
+            }
 
         }
     }

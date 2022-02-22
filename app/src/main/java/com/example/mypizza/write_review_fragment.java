@@ -141,7 +141,7 @@ public class write_review_fragment extends Fragment {
                         Model.instance.updateReviewUrl(r, url, new Model.UpdateReviewUrlListener() {
                             @Override
                             public void onComplete() {
-                                Navigation.findNavController(view).navigate(R.id.action_write_review_fragment_to_pizza_details_fragment);
+
                             }
                         });
                     }
