@@ -1,5 +1,7 @@
 package com.example.mypizza;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -42,11 +44,29 @@ public class login_page_fragment extends Fragment {
                 progBar.setVisibility(View.VISIBLE);
                 uEmail = email.getText().toString();
                 uPass= password.getText().toString();
-                loginUser();
+                if(uEmail.matches("") || uPass.matches("")){
+                    displayDialog("Error","All fields must be filled");
+                    progBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                else loginUser();
             }
         });
         return view;
     }
+    void displayDialog(String title,String msg){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
     public void loginUser(){
         Log.d("TAG", "loginUser: "+uEmail);
         Model.instance.signInWithEmailPass(uEmail,uPass,(User user, boolean success)->{
@@ -62,6 +82,7 @@ public class login_page_fragment extends Fragment {
                 }
             }
             else {
+                displayDialog("Error","Login Failed \nEmail or Password is incorrect");
                 progBar.setVisibility(View.INVISIBLE);
                 Log.d("TAG", "loginUser: Failed");
             }

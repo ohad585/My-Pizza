@@ -20,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mypizza.Model.Model;
-import com.example.mypizza.Model.Pizza;
 import com.example.mypizza.Model.Review;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -103,7 +103,7 @@ public class watch_all_reviews_manager_fragment extends Fragment {
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView reviewText;
         TextView writerEmail;
-        ImageView pizzaImg;
+        ImageView reviewImg;
         ImageView editImg;
         ImageView binImg;
 
@@ -114,7 +114,7 @@ public class watch_all_reviews_manager_fragment extends Fragment {
             super(itemView);
             reviewText = itemView.findViewById(R.id.review_line_show_review_tv);
             writerEmail = itemView.findViewById(R.id.review_line_show_emailAdd_tv);
-            pizzaImg = itemView.findViewById(R.id.review_line_show_img);
+            reviewImg = itemView.findViewById(R.id.review_line_show_img);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,6 +129,14 @@ public class watch_all_reviews_manager_fragment extends Fragment {
         public void bind(Review r) {
             reviewText.setText(r.getReview());
             writerEmail.setText(r.getWriterEmail());
+            String url = r.getImgUrl();
+            if(url != null)
+            {
+                Picasso.get()
+                        .load(url)
+                        .placeholder(R.drawable.avatar)
+                        .into(reviewImg);
+            }
 
         }
     }
