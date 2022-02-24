@@ -2,12 +2,16 @@ package com.example.mypizza;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
@@ -33,6 +37,8 @@ public class add_pizza_fragment extends Fragment {
     Button addPizzaBtn;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     final static int RESAULT_SUCCESS = 0;
+    String price;
+    String description;
 
 
     @Override
@@ -54,7 +60,15 @@ public class add_pizza_fragment extends Fragment {
         addPizzaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save();
+                price = pizzaPrice.getText().toString();
+                description = pizzaDescription.getText().toString();
+                if(price.length()==0 || description.length()==0 || bitmap==null){
+                    DialogFragment newFragment = new addPizzaEmptyFieldsDialog();
+                    newFragment.show(getActivity().getSupportFragmentManager(), "TAG");
+                }
+                else{
+                    save();
+                }
             }
         });
         return view;
@@ -72,8 +86,6 @@ public class add_pizza_fragment extends Fragment {
 
     private void save() {
         addPizzaBtn.setEnabled(false);
-        String price = pizzaPrice.getText().toString();
-        String description = pizzaDescription.getText().toString();
         Pizza p = new Pizza(price, description);
         if (bitmap == null) {
             Navigation.findNavController(view).navigateUp();
@@ -94,7 +106,6 @@ public class add_pizza_fragment extends Fragment {
                     });
                 }
             });
-
         }
     }
 }
