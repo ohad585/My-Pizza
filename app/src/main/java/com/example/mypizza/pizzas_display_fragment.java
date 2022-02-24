@@ -34,7 +34,6 @@ public class pizzas_display_fragment extends Fragment {
     View progBar;
 
 
-    //Todo: Add loading bar
 
 
     @Override

@@ -57,8 +57,8 @@ public class personal_page_costumer_fragment extends Fragment {
             public void onComplete(User user) {
                 email.setText(user.getEmail());
                 progBar.setVisibility(View.INVISIBLE);
-                showReviews();
                 currentUser=user;
+                showReviews();
             }
         });
 
