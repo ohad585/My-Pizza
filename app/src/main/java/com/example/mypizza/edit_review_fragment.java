@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public class edit_review_fragment extends Fragment {
     Button save_btn;
     Button cancel_btn;
     Button delete_btn;
-    ImageView img_btn;
+    ImageButton img_btn;
     View progBar;
     Review review;
     Bitmap bitmap;
@@ -80,7 +81,6 @@ public class edit_review_fragment extends Fragment {
         });
 
         progBar.setVisibility(View.VISIBLE);
-
         return view;
     }
 
@@ -95,29 +95,60 @@ public class edit_review_fragment extends Fragment {
     }
 
     private void updateDisplay(Review review) {
+        progBar.setVisibility(View.VISIBLE);
         if (review != null) {
             this.review = review;
             email_et.setText(review.getWriterEmail());
             email_et.setEnabled(false);
             review_et.setText(review.getReview());
-            progBar.setVisibility(View.GONE);
             if (review.getImgUrl() != null) {
                 Picasso.get()
                         .load(review.getImgUrl())
-                        .placeholder(R.drawable.avatar)
+                        .placeholder(R.drawable.pizza)
                         .into(img_btn);
             }
         }
+        progBar.setVisibility(View.GONE);
     }
 
     private void save() {
+        save_btn.setEnabled(false);
+        cancel_btn.setEnabled(false);
+        delete_btn.setEnabled(false);
         review.setReview(review_et.getText().toString());
+        updateReviewText();
+        updateReviewImg();
+        Navigation.findNavController(view).navigateUp();
+        Model.instance.reloadReviewsListByMail(review.getWriterEmail());
+
+    }
+
+
+
+
+    private void delete() {
+        save_btn.setEnabled(false);
+        cancel_btn.setEnabled(false);
+        delete_btn.setEnabled(false);
+        review.setDeleted(true);
+        Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
+            @Override
+            public void onComplete() {
+                Navigation.findNavController(view).navigateUp();
+                Model.instance.reloadReviewsListByMail(review.getWriterEmail());
+            }
+        });
+    }
+
+    private void updateReviewText() {
         Model.instance.updateReview(review, new Model.UpdateReviewListener() {
             @Override
             public void onComplete(Review r) {
                 Model.instance.reloadReviewsListByMail(review.getWriterEmail());
             }
         });
+    }
+    private void updateReviewImg() {
         if (bitmap == null) {
             Log.d("TAG", "bitmap is null");
         } else {
@@ -128,25 +159,11 @@ public class edit_review_fragment extends Fragment {
                     Model.instance.updateReviewUrl(review,review.getImgUrl(), new Model.UpdateReviewUrlListener() {
                         @Override
                         public void onComplete() {
-                            Navigation.findNavController(view).navigateUp();
                         }
                     });
                 }
             });
         }
-        Model.instance.reloadReviewsListByMail(review.getWriterEmail());
-
-    }
-
-    private void delete() {
-        review.setDeleted(true);
-        Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
-            @Override
-            public void onComplete() {
-                Navigation.findNavController(view).navigateUp();
-                Model.instance.reloadReviewsListByMail(review.getWriterEmail());
-            }
-        });
     }
 }
 

@@ -102,14 +102,15 @@
 
     <ImageButton
         android:id="@+id/edit_review_img"
-        android:layout_width="240dp"
-        android:layout_height="199dp"
+        android:layout_width="241dp"
+        android:layout_height="217dp"
         app:layout_constraintBottom_toTopOf="@+id/edit_review_delete_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_review_review_et"
         app:layout_constraintVertical_bias="0.735"
         app:srcCompat="@drawable/addphoto"
+        android:scaleType="fitCenter"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <ProgressBar

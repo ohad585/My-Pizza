@@ -31,7 +31,7 @@
         android:id="@+id/personal_page_manager_img"
         android:layout_width="155dp"
         android:layout_height="145dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="88dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

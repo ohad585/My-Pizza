@@ -20,6 +20,7 @@ import com.example.mypizza.Model.User;
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
     User u=null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,12 +28,15 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment nav_host = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView2);
         navCtrl = nav_host.getNavController();
         NavigationUI.setupActionBarWithNavController(this,navCtrl);
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-            @Override
-            public void onComplete(User user) {
-                u=user;
-            }
-        });
+        if(u!=null){
+            Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+                @Override
+                public void onComplete(User user) {
+                    u=user;
+                }
+            });
+        }
+
 
     }
     @Override
@@ -49,6 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+            @Override
+            public void onComplete(User user) {
+                u=user;
+            }
+        });
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.menu_pizzas_menu:
