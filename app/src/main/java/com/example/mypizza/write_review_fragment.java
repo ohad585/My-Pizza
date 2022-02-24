@@ -2,6 +2,8 @@ package com.example.mypizza;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -103,6 +105,7 @@ public class write_review_fragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {//img was taken and return to code
             Bundle bundle = data.getExtras();
             bitmap = (Bitmap) bundle.get("data");
+            addReviewPhoto.setImageBitmap(bitmap);
         }
     }
 
@@ -120,10 +123,23 @@ public class write_review_fragment extends Fragment {
         progBar.setVisibility(View.INVISIBLE);
     }
 
+    void displayDialog(String title,String msg){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
     void save(){
         if(bitmap == null){
             //Please add pizza photo first
+            displayDialog("Error","Please add an image");
             return;
         }
         String rev = review.getText().toString();

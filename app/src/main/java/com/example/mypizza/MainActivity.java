@@ -27,12 +27,12 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment nav_host = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView2);
         navCtrl = nav_host.getNavController();
         NavigationUI.setupActionBarWithNavController(this,navCtrl);
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-            @Override
-            public void onComplete(User user) {
-                u=user;
-            }
-        });
+//        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+//            @Override
+//            public void onComplete(User user) {
+//                u=user;
+//            }
+//        });
 
     }
     @Override

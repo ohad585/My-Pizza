@@ -2,6 +2,8 @@ package com.example.mypizza;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -69,6 +71,18 @@ public class add_pizza_fragment extends Fragment {
             pizzaImg.setImageBitmap(bitmap);
         }
     }
+    void displayDialog(String title,String msg){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getContext()).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(msg);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 
     private void save() {
         addPizzaBtn.setEnabled(false);
@@ -89,6 +103,9 @@ public class add_pizza_fragment extends Fragment {
                                 p.setUid(uid);
                                 Log.d("TAG", "onComplete: "+p.getUid());
                                 Navigation.findNavController(view).navigate(R.id.action_add_pizza_fragment_to_personal_page_manager_fragment);
+                            }
+                            if (flag==false){
+                                displayDialog("Error","Pizza not saved\ndescription already used");
                             }
                         }
                     });
