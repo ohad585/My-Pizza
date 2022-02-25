@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -56,7 +57,19 @@ public class add_pizza_fragment extends Fragment {
         addPizzaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save();
+                addPizzaBtn.setClickable(false);
+                pizzaImg.setClickable(false);
+                String price = pizzaPrice.getText().toString();
+                String description = pizzaDescription.getText().toString();
+                if(price.length()==0 || description.length()==0 || bitmap==null){
+                    DialogFragment newFragment = new addPizzaEmptyFieldsDialog();
+                    newFragment.show(getActivity().getSupportFragmentManager(), "TAG");
+                    addPizzaBtn.setClickable(true);
+                    pizzaImg.setClickable(true);
+                }
+                else{
+                    save();
+                }
             }
         });
         return view;

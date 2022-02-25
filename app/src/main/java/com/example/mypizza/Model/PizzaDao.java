@@ -13,7 +13,7 @@ public interface PizzaDao {
     @Query("select * from Pizza")
     List<Pizza> getAll();
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Pizza... pizzas);
 
     @Delete

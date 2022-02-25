@@ -56,9 +56,9 @@ public class personal_page_costumer_fragment extends Fragment {
             @Override
             public void onComplete(User user) {
                 email.setText(user.getEmail());
-                progBar.setVisibility(View.INVISIBLE);
-                showReviews();
                 currentUser=user;
+                showReviews();
+                progBar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -71,7 +71,6 @@ public class personal_page_costumer_fragment extends Fragment {
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MyAdapter();
         list.setAdapter(adapter);
-        //to fix
         swipeRefresh = view.findViewById(R.id.personal_page_costumer_swiperefresh);
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
