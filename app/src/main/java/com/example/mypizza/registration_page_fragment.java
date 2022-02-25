@@ -63,7 +63,6 @@ public class registration_page_fragment extends Fragment {
 
 
     void regUser(){
-
         String phone=phone_et.getText().toString();
         String pass1=pass1_et.getText().toString();
         String pass2=pass2_et.getText().toString();
@@ -80,6 +79,7 @@ public class registration_page_fragment extends Fragment {
             return;
         }
         progBar.setVisibility(View.VISIBLE);
+        reg_btn.setClickable(false);
         if(admin_cb.isChecked()){
             //Admin Registration
             if(!apass.matches(REG_ADMINPASS)){
@@ -91,6 +91,7 @@ public class registration_page_fragment extends Fragment {
                 public void onComplete(String uid) {
                     if (uid==null){
                         progBar.setVisibility(View.INVISIBLE);
+                        reg_btn.setClickable(true);
                         displayDialog("Error","Somthing went wrong please try again");
                         return;
                     }
@@ -102,6 +103,7 @@ public class registration_page_fragment extends Fragment {
                                 Navigation.findNavController(view).navigate(R.id.action_registration_page_fragment_to_login_page_fragment);
                             }else {
                                 progBar.setVisibility(View.INVISIBLE);
+                                reg_btn.setClickable(true);
                                 displayDialog("Error","Somthing went wrong please try again");
                             }
                         }

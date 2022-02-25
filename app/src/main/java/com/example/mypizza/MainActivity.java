@@ -51,12 +51,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-            @Override
-            public void onComplete(User user) {
-                u=user;
-            }
-        });
+        if(u==null) {
+            Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+                @Override
+                public void onComplete(User user) {
+                    u = user;
+                    whereTo(item);
+                }
+            });
+        }else return whereTo(item);
+
+
+        return true;
+    }
+    public boolean whereTo(MenuItem item){
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.menu_pizzas_menu:
@@ -64,17 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.menu_personal_page:
                     //add check if user is manager or client and to assign to u User parm
-                    if (u.isAdmin()==true){
+                    if (u.isAdmin() == true) {
                         navCtrl.navigate(R.id.personal_page_manager_fragment);
-                    }
-                    else if (u.isAdmin()==false){
+                    } else if (u.isAdmin() == false) {
                         navCtrl.navigate(R.id.personal_page_costumer_fragment);
                     }
-//                    else{
-//                        DialogFragment newFragment = new personalPageDialogFragment();
-//                        newFragment.show(getSupportFragmentManager(), "TAG");
-//                    }
-
                     return true;
 
                 case android.R.id.home:

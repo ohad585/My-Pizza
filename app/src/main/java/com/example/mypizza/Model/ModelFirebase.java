@@ -101,10 +101,11 @@ public class ModelFirebase {
         });
     }
 
-    //    public interface getAdminData {
-//        void onComplete(boolean isAdmin);
-//    }
-    public void checkUserAdmin(User user) {
+    public interface getAdminData {
+        void onComplete(boolean isAdmin);
+    }
+
+    public void checkUserAdmin(User user, getAdminData listener) {
         DocumentReference docRef = db.collection("users").document(user.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -113,7 +114,7 @@ public class ModelFirebase {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         User u = User.fromJson(document.getData());
-                        user.setAdmin(u.isAdmin());
+                        listener.onComplete(u.isAdmin());
                     }
                 } else {
                     Log.d("TAG1234", "get failed with ", task.getException());
@@ -122,6 +123,7 @@ public class ModelFirebase {
             }
         });
     }
+
 
     public void reg(String email, String password, Model.RegistrationByMailPassListener listener) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -252,11 +254,20 @@ public class ModelFirebase {
     public void getCurrentUser(Model.getCurrentUserListener listener) {
         //getAdminData listener1 = null;
         FirebaseUser user = mAuth.getCurrentUser();
+        if(user ==null){
+            listener.onComplete(null);
+            return;
+        }
         User usr=new User();
         usr.setEmail(user.getEmail());
         usr.setUid(user.getUid());
-        checkUserAdmin(usr);
-        listener.onComplete(usr);
+        checkUserAdmin(usr, new getAdminData() {
+            @Override
+            public void onComplete(boolean isAdmin) {
+                usr.setAdmin(isAdmin);
+                listener.onComplete(usr);
+            }
+        });
     }
 
     public void getAllPizzas(long since, Model.GetAllPizzasListener listener) {
@@ -397,7 +408,7 @@ public class ModelFirebase {
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update("IS_DELETED", review.isDeleted(),"LAST_UPDATE", FieldValue.serverTimestamp()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.update(Review.IS_DELETED, review.isDeleted(),Review.LAST_UPDATED, FieldValue.serverTimestamp()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "DocumentSnapshot successfully deleted!");

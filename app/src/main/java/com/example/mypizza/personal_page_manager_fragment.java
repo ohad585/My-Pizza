@@ -24,6 +24,7 @@ public class personal_page_manager_fragment extends Fragment {
     Button addPizzaBtn;
     Button watchAndRemovePizza;
 
+    View progBar;
     User currentUser;
     TextView email;
 
@@ -37,8 +38,10 @@ public class personal_page_manager_fragment extends Fragment {
         addPizzaBtn= view.findViewById(R.id.personal_page_manager_addPizza_btn);
         watchAndRemovePizza= view.findViewById(R.id.personal_page_manager_watch_and_edit_btn);
         email = view.findViewById(R.id.personal_page_manager_enailAddress_tv);
-//        progBar = view.findViewById(R.id.personal_page_costumer_progBar);
-//        progBar.setVisibility(View.VISIBLE);
+        progBar = view.findViewById(R.id.personal_page_manager_progBar);
+        progBar.setVisibility(View.VISIBLE);
+        addPizzaBtn.setClickable(false);
+        watchAndRemovePizza.setClickable(false);
         addPizzaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +61,9 @@ public class personal_page_manager_fragment extends Fragment {
             public void onComplete(User user) {
                 currentUser=user;
                 email.setText(user.getEmail());
+                progBar.setVisibility(View.INVISIBLE);
+                addPizzaBtn.setClickable(true);
+                watchAndRemovePizza.setClickable(true);
             }
         });
 

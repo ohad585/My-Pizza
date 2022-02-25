@@ -118,6 +118,9 @@
         <action
             android:id="@+id/action_home_page_fragment2_to_registration_page_fragment"
             app:destination="@id/registration_page_fragment" />
+        <action
+            android:id="@+id/action_home_page_fragment2_to_personal_page_costumer_fragment"
+            app:destination="@id/personal_page_costumer_fragment" />
     </fragment>
     <fragment
         android:id="@+id/edit_review_fragment"

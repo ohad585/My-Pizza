@@ -49,7 +49,7 @@ public class pizzas_display_fragment extends Fragment {
         view = inflater.inflate(R.layout.pizzas_display, container, false);
 
         progBar = view.findViewById(R.id.pizzas_display_progressBar);
-        progBar.setVisibility(View.INVISIBLE);
+        progBar.setVisibility(View.VISIBLE);
         RecyclerView list = view.findViewById(R.id.pizzas_display_rv);
         list.setHasFixedSize(true);
 
@@ -90,7 +90,7 @@ public class pizzas_display_fragment extends Fragment {
         swipeRefresh.setRefreshing(Model.instance.getPizzaListLoadingState().getValue()== Model.LoadingState.loading);
         Model.instance.getPizzaListLoadingState().observe(getViewLifecycleOwner(),loadingState ->
                 swipeRefresh.setRefreshing(loadingState == Model.LoadingState.loading));
-
+        progBar.setVisibility(View.INVISIBLE);
         return view;
     }
     private void refreshData() {

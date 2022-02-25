@@ -8,12 +8,16 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.mypizza.Model.Model;
+import com.example.mypizza.Model.User;
 
 public class home_page_fragment extends Fragment {
     Button loginBtn;
@@ -34,7 +38,19 @@ public class home_page_fragment extends Fragment {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navCtrl.navigate(R.id.login_page_fragment);
+                Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+                    @Override
+                    public void onComplete(User user) {
+                        if (user ==null){
+                            navCtrl.navigate(R.id.login_page_fragment);
+                        }else {
+                            if(user.isAdmin()){
+                                navCtrl.navigate(R.id.personal_page_manager_fragment);
+                            }else navCtrl.navigate(R.id.personal_page_costumer_fragment);
+                        }
+                    }
+                });
+
             }
         });
         regBtn.setOnClickListener(new View.OnClickListener() {
