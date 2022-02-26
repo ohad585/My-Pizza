@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.example.mypizza.Model.Model;
 import com.example.mypizza.Model.Review;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 import com.squareup.picasso.Picasso;
 
 public class edit_review_fragment extends Fragment {
@@ -131,6 +133,7 @@ public class edit_review_fragment extends Fragment {
         cancel_btn.setEnabled(false);
         delete_btn.setEnabled(false);
         review.setDeleted(true);
+        review.setLastUpdated(System.currentTimeMillis());
         Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
             @Override
             public void onComplete() {
@@ -164,7 +167,9 @@ public class edit_review_fragment extends Fragment {
                 }
             });
         }
+        Model.instance.reloadReviewsListByMail(review.getWriterEmail());
     }
+
 }
 
 
