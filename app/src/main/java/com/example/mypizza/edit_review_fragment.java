@@ -117,7 +117,6 @@ public class edit_review_fragment extends Fragment {
         updateReviewText();
         Navigation.findNavController(view).navigateUp();
         Model.instance.reloadReviewsListByMail(review.getWriterEmail());
-
     }
 
 

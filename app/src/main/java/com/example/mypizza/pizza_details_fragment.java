@@ -96,9 +96,7 @@ public class pizza_details_fragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                //progBar.setVisibility(View.VISIBLE);
                 Review re = pizzaReviewList.get(position);
-                Log.d("TAG", "review is clicked: "+re.getReview());
             }
         });
 
@@ -110,7 +108,6 @@ public class pizza_details_fragment extends Fragment {
         return view;
     }
     void update(){
-        Log.d("TAG", "update: ");
         price.setText(p.getPrice());
         tops.setText(p.getDescription());
         String url = p.getImgUrl();
@@ -128,7 +125,6 @@ public class pizza_details_fragment extends Fragment {
 
     void updatePizzaReviewList(){
         if(p==null) {
-            Log.d("TAG", "updatePizzaReviewList: ");
             return;
         }
         pizzaReviewList=new LinkedList<>();

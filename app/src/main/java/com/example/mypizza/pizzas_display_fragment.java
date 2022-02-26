@@ -34,7 +34,6 @@ public class pizzas_display_fragment extends Fragment {
     View progBar;
 
 
-    //Todo: Add loading bar
 
 
     @Override
@@ -66,7 +65,6 @@ public class pizzas_display_fragment extends Fragment {
                 Pizza pz = viewModel.getData().getValue().get(position);
                 pizzas_display_fragmentDirections.ActionPizzasDisplayFragmentToPizzaDetailsFragment action = pizzas_display_fragmentDirections.actionPizzasDisplayFragmentToPizzaDetailsFragment(pz.getDescription());
                 Navigation.findNavController(view).navigate(action);
-                Log.d("TAG", "onItemClick: "+pz.getDescription());
             }
         });
         swipeRefresh = view.findViewById(R.id.pizzas_display_swipe_refresh);
@@ -95,7 +93,6 @@ public class pizzas_display_fragment extends Fragment {
         return view;
     }
     private void refreshData() {
-        Log.d("TAG", "refreshData: ");
     }
 
 

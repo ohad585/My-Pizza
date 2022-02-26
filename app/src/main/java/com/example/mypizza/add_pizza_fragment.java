@@ -114,7 +114,6 @@ public class add_pizza_fragment extends Fragment {
                         public void onComplete(boolean flag,String uid) {
                             if (flag == true) {
                                 p.setUid(uid);
-                                Log.d("TAG", "onComplete: "+p.getUid());
                                 Navigation.findNavController(view).navigate(R.id.action_add_pizza_fragment_to_personal_page_manager_fragment);
                             }
                             if (flag==false){

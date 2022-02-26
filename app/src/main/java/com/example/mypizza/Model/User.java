@@ -7,6 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
+    final static String EMAIL = "email";
+    final static String PASSWORD = "password";
+    final static String PHONE = "phone";
+    final static String UID = "uid";
+    final static String ADMIN = "admin";
     private String password;
     private String phoneNum;
     private String email;
@@ -68,24 +73,24 @@ public class User {
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
-        json.put("email", getEmail());
-        json.put("password", getPassword());
-        json.put("phone", getPhoneNum());
-        json.put("uid",getUid());
-        json.put("admin",isAdmin());
+        json.put(EMAIL, getEmail());
+        json.put(PASSWORD, getPassword());
+        json.put(PHONE, getPhoneNum());
+        json.put(UID,getUid());
+        json.put(ADMIN,isAdmin());
         return json;
     }
 
 
     static User fromJson(Map<String,Object> json){
-        String email = (String)json.get("email");
+        String email = (String)json.get(EMAIL);
         if (email == null){
             return null;
         }
-        String password = (String)json.get("password");
-        String phone = (String)json.get("phone");
-        String uid = (String)json.get("uid");
-        boolean admin= (boolean)json.get("admin");
+        String password = (String)json.get(PASSWORD);
+        String phone = (String)json.get(PHONE);
+        String uid = (String)json.get(UID);
+        boolean admin= (boolean)json.get(ADMIN);
         User user = new User(email,password,phone,admin,uid);
         return user;
     }

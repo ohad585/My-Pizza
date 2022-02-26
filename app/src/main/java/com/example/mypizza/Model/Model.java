@@ -80,16 +80,10 @@ public class Model {
 
     public void reloadPizzasList() {
         pizzaListLoadingState.setValue(LoadingState.loading);
-        //1. get local last update
         Long localLastUpdate = Pizza.getLocalLastUpdated();
-        Log.d("TAG", "Reload pizzas localLastUpdate: " + localLastUpdate);
-        //2. get all students record since local last update from firebase
         modelFirebase.getAllPizzas(localLastUpdate, (list) -> {
             MyApplication.executorService.execute(() -> {
-                //3. update local last update date
-                //4. add new records to the local db
                 Long lLastUpdate = new Long(0);
-                Log.d("TAG", "pizzas returned " + list.size());
                 for (Pizza s : list) {
                     AppLocalDBPizza.db.pizzaDao().insertAll(s);
                     if (s.getLastUpdated() > lLastUpdate) {
@@ -97,10 +91,7 @@ public class Model {
                     }
                 }
                 Pizza.setLocalLastUpdated(lLastUpdate);
-
-                //5. return all records to the caller
                 List<Pizza> stList = AppLocalDBPizza.db.pizzaDao().getAll();
-
                 pizzasListLd.postValue(stList);
                 pizzaListLoadingState.postValue(LoadingState.loaded);
             });
@@ -109,26 +100,20 @@ public class Model {
 
     public void reloadReviewsList() {
         reviewsListLoadingState.setValue(LoadingState.loading);
-        //1. get local last update
         Long localLastUpdate = Review.getLocalLastUpdated();
-        Log.d("TAG", "review localLastUpdate: " + localLastUpdate);
         modelFirebase.getAllReviews(localLastUpdate, (list) -> {
             MyApplication.executorService.execute(() -> {
                 Long lLastUpdate = new Long(0);
                 for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
-                    Log.d("TAG", "reloadReviewsList: local db updated with "+s.getReview());
                     if (s.getLastUpdated() > lLastUpdate) {
                         lLastUpdate = s.getLastUpdated();
                     }
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
-                Log.d("TAG", "review localLastUpdate: " + lLastUpdate);
-                //5. return all records to the caller
                 List<Review> stList = new LinkedList<>();
                 for(Review s : AppLocalDBReview.db.reviewDao().getAll()){
                     if(!s.isDeleted()) {
-                        Log.d("TAG", "Review not deleted "+s.getReview() + s.isDeleted());
                         stList.add(s);
                     }
                 }
@@ -151,7 +136,6 @@ public class Model {
                     }
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
-                //5. return all records to the caller
                 List<Review> stList = new LinkedList<>();
                 for(Review s : AppLocalDBReview.db.reviewDao().getReviewByMail(writerMail)) {
                     if (!s.isDeleted())
@@ -189,13 +173,6 @@ public class Model {
         modelFirebase.getUserByEmail(email, listener);
     }
 
-    public interface checkLogInListener {
-        void onComplete(User u);
-    }
-//    public void checkUser(String name, String pass,checkLogInListener listener) {
-//        modelFirebase.checkUser(name,pass,listener);
-//
-//    }
 
     public interface RegistrationByMailPassListener {
         void onComplete(String uid);

@@ -138,17 +138,14 @@ public class write_review_fragment extends Fragment {
 
     void save(){
         if(bitmap == null){
-            //Please add pizza photo first
             displayDialog("Error","Please add an image");
             return;
         }
         String rev = review.getText().toString();
         Review r = new Review(rev,u.getEmail(),p.getDescription());
-        Log.d("TAG", "save: "+rev+" user:"+u.getEmail());
         Model.instance.addReview(r, new Model.AddReviewListener() {
             @Override
             public void onComplete( String reviewID) {
-                Log.d("TAG", "onComplete: Review saved");
                 r.setReviewID(reviewID);
                 Model.instance.saveReviewImg(bitmap, r.getReviewID(), new Model.SaveImageListener() {
                     @Override

@@ -68,11 +68,9 @@ public class login_page_fragment extends Fragment {
     }
 
     public void loginUser(){
-        Log.d("TAG", "loginUser: "+uEmail);
         Model.instance.signInWithEmailPass(uEmail,uPass,(User user, boolean success)->{
             if(success){
                 progBar.setVisibility(View.INVISIBLE);
-                Log.d("TAG", "loginUser: "+user.getEmail()+" "+user.getUid());
                 if(user.isAdmin()==false){
                     Navigation.findNavController(view).navigate(R.id.action_login_page_fragment_to_personal_page_costumer_fragment);
                 }
@@ -84,7 +82,6 @@ public class login_page_fragment extends Fragment {
             else {
                 displayDialog("Error","Login Failed \nEmail or Password is incorrect");
                 progBar.setVisibility(View.INVISIBLE);
-                Log.d("TAG", "loginUser: Failed");
             }
         });
     }

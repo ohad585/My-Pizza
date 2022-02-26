@@ -22,7 +22,6 @@ public class Review {
     final static String PIZZAID = "pizzaID";
     final static String REVIEWUPDATE = "REVIEW_LAST_UPDATE";
     final static String LAST_UPDATED = "LAST_UPDATE";
-    //final static String REVIEW_ID = "REVIEW_ID";
     final static String IS_DELETED="IS_DELETED";
     final static String IMGURL = "imgUrl";
 
@@ -44,7 +43,6 @@ public class Review {
         this.review=review;
         this.writerEmail = writer;
         this.pizzaID = pizza;
-        //this.ReviewID=writerEmail+pizza;
         isDeleted=false;
         imgUrl = "";
     }
@@ -110,7 +108,6 @@ public class Review {
         json.put(WRITEREMAIL, getWriterEmail());
         json.put(PIZZAID,getPizzaID());
         json.put(LAST_UPDATED, FieldValue.serverTimestamp());
-        //json.put(REVIEW_ID,getReviewID());
         json.put(IS_DELETED,isDeleted());
         json.put(IMGURL,getImgUrl());
 
@@ -146,7 +143,6 @@ public class Review {
                 .getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
         editor.putLong(REVIEWUPDATE,date);
         editor.commit();
-        Log.d("TAG", "new lud " + date);
     }
 
     public String getReviewID() {
