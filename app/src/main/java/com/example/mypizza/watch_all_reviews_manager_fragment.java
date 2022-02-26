@@ -68,7 +68,6 @@ public class watch_all_reviews_manager_fragment extends Fragment {
             @Override
             public void onChanged(List<Review> reviews) {
                 allReviewsList = reviews ;
-                Log.d("TAG", "onChanged: Review list updated");
                 adapter.notifyDataSetChanged();
             }
 
@@ -81,7 +80,6 @@ public class watch_all_reviews_manager_fragment extends Fragment {
                 Review re = allReviewsList.get(position);
                 watch_all_reviews_manager_fragmentDirections.ActionWatchAllReviewsManagerFragmentToEditReviewFragment action=watch_all_reviews_manager_fragmentDirections.actionWatchAllReviewsManagerFragmentToEditReviewFragment(re.getReviewID());
                 Navigation.findNavController(view).navigate(action);
-                Log.d("TAG", "review is clicked: "+re.getReviewID());
             }
         });
 
@@ -92,7 +90,6 @@ public class watch_all_reviews_manager_fragment extends Fragment {
         return view;
     }
     private void refreshData() {
-        Log.d("TAG", "refreshData: watch reviews");
         allReviewsList = viewModel.getData().getValue();
     }
 
@@ -104,10 +101,6 @@ public class watch_all_reviews_manager_fragment extends Fragment {
         TextView reviewText;
         TextView writerEmail;
         ImageView reviewImg;
-        ImageView editImg;
-        ImageView binImg;
-
-
 
 
         public MyViewHolder(@NonNull View itemView,OnItemClickListener listener) {

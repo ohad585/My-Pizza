@@ -29,14 +29,12 @@ import java.util.List;
 
 public class personal_page_costumer_fragment extends Fragment {
     View view;
-    Review r;
     View progBar;
     TextView email;
     costumerReviewViewModel viewModel;
     MyAdapter adapter;
     SwipeRefreshLayout swipeRefresh;
     User currentUser;
-    List<Review> reviewList = new LinkedList<>();
 
 
     public void onAttach(@NonNull Context context) {
@@ -98,7 +96,6 @@ public class personal_page_costumer_fragment extends Fragment {
                 Review re = viewModel.getData().getValue().get(position);
                 personal_page_costumer_fragmentDirections.ActionPersonalPageCostumerFragmentToEditReviewFragment action =personal_page_costumer_fragmentDirections.actionPersonalPageCostumerFragmentToEditReviewFragment(re.getReviewID());
                 Navigation.findNavController(view).navigate(action);
-                Log.d("TAG", "review is clicked: " + re.getReviewID());
             }
         });
         swipeRefresh.setRefreshing(Model.instance.getReviewListForUserLoadingState().getValue() == Model.LoadingState.loading);
@@ -108,7 +105,7 @@ public class personal_page_costumer_fragment extends Fragment {
     }
 
     private void refreshData(){
-        Log.d("TAG", "refreshData: watch reviews");
+
     }
 
     interface OnItemClickListener {

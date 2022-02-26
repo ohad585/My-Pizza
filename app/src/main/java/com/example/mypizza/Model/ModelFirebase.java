@@ -32,6 +32,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 public class ModelFirebase {
+    final static String USERS_DB = "users";
+    final static String PIZZA_DASH = "pizza/";
+    final static String JPG = ".jpg";
+    final static String REVIEWS_DASH = "reviews/";
+    final static String PIZZAS_DB = "pizzas";
+    final static String REVIEWS_DB = "reviews";
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -55,7 +61,7 @@ public class ModelFirebase {
     }
 
     public void getUserByEmail(String email, Model.GetUserByUserNameListener listener) {
-        DocumentReference docRef = db.collection("users").document(email);
+        DocumentReference docRef = db.collection(USERS_DB).document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -68,33 +74,6 @@ public class ModelFirebase {
                         listener.onComplete(null);
                     }
                 } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                    listener.onComplete(null);
-                }
-            }
-        });
-    }
-
-    public void checkUser(String name, String pass, Model.checkLogInListener listener) {
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        User u = User.fromJson(document.getData());
-                        String passFromDB = u.getPassword();
-                        if (pass == passFromDB) {
-                            //login success
-                            listener.onComplete(u);
-                        }
-                    } else {
-                        //name doesnt match to password
-                        listener.onComplete(null);
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
                     listener.onComplete(null);
                 }
             }
@@ -106,7 +85,7 @@ public class ModelFirebase {
     }
 
     public void checkUserAdmin(User user, getAdminData listener) {
-        DocumentReference docRef = db.collection("users").document(user.getEmail());
+        DocumentReference docRef = db.collection(USERS_DB).document(user.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -116,10 +95,7 @@ public class ModelFirebase {
                         User u = User.fromJson(document.getData());
                         listener.onComplete(u.isAdmin());
                     }
-                } else {
-                    Log.d("TAG1234", "get failed with ", task.getException());
                 }
-
             }
         });
     }
@@ -146,7 +122,6 @@ public class ModelFirebase {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("TAG", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             getUserByEmail(user.getEmail(), new Model.GetUserByUserNameListener() {
                                 @Override
@@ -156,7 +131,6 @@ public class ModelFirebase {
                             });
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("TAG", "signInWithEmail:failure", task.getException());
                             listener.onComplete(null, false);
                         }
                     }
@@ -167,7 +141,7 @@ public class ModelFirebase {
     public void saveImage(Bitmap bitmap, String description, Model.SaveImageListener listener) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("pizza/" + description + ".jpg");
+        StorageReference imageRef = storageRef.child(PIZZA_DASH + description + JPG);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -184,7 +158,7 @@ public class ModelFirebase {
     public void saveImageReview(Bitmap bitmap, String reviewId, Model.SaveImageListener listener) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("reviews/" + reviewId + ".jpg");
+        StorageReference imageRef = storageRef.child(REVIEWS_DASH + reviewId + JPG);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -200,8 +174,7 @@ public class ModelFirebase {
     }
 
     public void getPizzaByID(String id, Model.GetPizzaByIDListener listener) {
-        Log.d("TAG", "getPizzaByID: " + id);
-        DocumentReference docRef = db.collection("pizzas").document(id);
+        DocumentReference docRef = db.collection(PIZZAS_DB).document(id);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -219,7 +192,7 @@ public class ModelFirebase {
     }
 
     public void getPizzaByDescription(String description, Model.GetPizzaByDescriptionListener listener) {
-        db.collection("pizzas").whereEqualTo("description", description)
+        db.collection(PIZZAS_DB).whereEqualTo(Pizza.DESC, description)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -240,7 +213,7 @@ public class ModelFirebase {
 
 
     public void addPizza(Pizza p, Model.AddPizzaListener listener, Model.AddPizzaListener listener2) {
-        db.collection("pizzas")
+        db.collection(PIZZAS_DB)
                 .add(p.toJson())
                 .addOnSuccessListener((successListener) -> {
                     listener.onComplete(true, successListener.getId().toString());
@@ -252,7 +225,6 @@ public class ModelFirebase {
     }
 
     public void getCurrentUser(Model.getCurrentUserListener listener) {
-        //getAdminData listener1 = null;
         FirebaseUser user = mAuth.getCurrentUser();
         if(user ==null){
             listener.onComplete(null);
@@ -271,7 +243,7 @@ public class ModelFirebase {
     }
 
     public void getAllPizzas(long since, Model.GetAllPizzasListener listener) {
-        db.collection("pizzas")
+        db.collection(PIZZAS_DB)
                 .whereGreaterThanOrEqualTo(Pizza.LAST_UPDATED, new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -298,7 +270,7 @@ public class ModelFirebase {
     }
 
     public void addReview(Review r, Model.AddReviewListener listener) {
-        db.collection("reviews").add(r.toJson())
+        db.collection(REVIEWS_DB).add(r.toJson())
                 .addOnSuccessListener((successListener) -> {
                     r.setReviewID(successListener.getId());
                     String reviewID=successListener.getId();
@@ -310,7 +282,7 @@ public class ModelFirebase {
     }
 
     public void getAllReviews(long since, Model.GetAllReviewsListener listener) {
-        db.collection("reviews")
+        db.collection(REVIEWS_DB)
                 .whereGreaterThanOrEqualTo(Review.LAST_UPDATED,new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -338,8 +310,7 @@ public class ModelFirebase {
     }
 
     public void getReviewByID(String reviewID, Model.getReviewByIDListener listener) {
-        Log.d("TAG","review Id is:"+reviewID);
-        DocumentReference docRef = db.collection("reviews").document(reviewID);
+        DocumentReference docRef = db.collection(REVIEWS_DB).document(reviewID);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -362,7 +333,7 @@ public class ModelFirebase {
 
 
     public void getAllReviewsByWriterMail(long since,String writerMail, Model.GetAllReviewsForUserListener listener) {
-        db.collection("reviews")
+        db.collection(REVIEWS_DB)
                 .whereGreaterThanOrEqualTo(Review.LAST_UPDATED, new Timestamp(since, 0))
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -390,8 +361,8 @@ public class ModelFirebase {
     }
 
     public void updateReview(Review review, Model.UpdateReviewListener listener) {
-        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update("review",review.getReview(),"LAST_UPDATE", FieldValue.serverTimestamp())
+        DocumentReference docRef = db.collection(REVIEWS_DB).document(review.getReviewID());
+        docRef.update(Review.REVIEW,review.getReview(),Review.LAST_UPDATED, FieldValue.serverTimestamp())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -407,7 +378,7 @@ public class ModelFirebase {
                 });
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
-        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
+        DocumentReference docRef = db.collection(REVIEWS_DB).document(review.getReviewID());
         docRef.update(Review.IS_DELETED, true, Review.LAST_UPDATED, FieldValue.serverTimestamp())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -424,8 +395,8 @@ public class ModelFirebase {
                 });
     }
     public void updateReviewUrl(Review review,String url, Model.UpdateReviewUrlListener listener) {
-        DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update("imgUrl",review.getImgUrl(),"LAST_UPDATE", FieldValue.serverTimestamp())
+        DocumentReference docRef = db.collection(REVIEWS_DB).document(review.getReviewID());
+        docRef.update(Review.IMGURL,review.getImgUrl(),Review.LAST_UPDATED, FieldValue.serverTimestamp())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -444,7 +415,7 @@ public class ModelFirebase {
     public void UpdateReviewImg(Bitmap bitmap, String reviewId, Model.SaveImageListener listener) {
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference imageRef = storageRef.child("reviews/" + reviewId + ".jpg");
+            StorageReference imageRef = storageRef.child(REVIEWS_DASH + reviewId + JPG);
             imageRef.delete();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
