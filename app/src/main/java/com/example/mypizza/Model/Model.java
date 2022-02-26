@@ -117,12 +117,13 @@ public class Model {
                 Long lLastUpdate = new Long(0);
                 for (Review s : list) {
                     AppLocalDBReview.db.reviewDao().insertAll(s);
-                    Log.d("TAG", "reloadReviewsList: local db updated");
+                    Log.d("TAG", "reloadReviewsList: local db updated with "+s.getReview());
                     if (s.getLastUpdated() > lLastUpdate) {
                         lLastUpdate = s.getLastUpdated();
                     }
                 }
                 Review.setLocalLastUpdated(lLastUpdate);
+                Log.d("TAG", "review localLastUpdate: " + lLastUpdate);
                 //5. return all records to the caller
                 List<Review> stList = new LinkedList<>();
                 for(Review s : AppLocalDBReview.db.reviewDao().getAll()){

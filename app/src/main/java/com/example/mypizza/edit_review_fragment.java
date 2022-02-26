@@ -20,6 +20,8 @@ import android.widget.TextView;
 
 import com.example.mypizza.Model.Model;
 import com.example.mypizza.Model.Review;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 import com.squareup.picasso.Picasso;
 
 public class edit_review_fragment extends Fragment {
@@ -112,6 +114,31 @@ public class edit_review_fragment extends Fragment {
 
     private void save() {
         review.setReview(review_et.getText().toString());
+        updateReviewText();
+        Navigation.findNavController(view).navigateUp();
+        Model.instance.reloadReviewsListByMail(review.getWriterEmail());
+
+    }
+
+
+
+
+    private void delete() {
+        save_btn.setEnabled(false);
+        cancel_btn.setEnabled(false);
+        delete_btn.setEnabled(false);
+        review.setDeleted(true);
+        review.setLastUpdated(System.currentTimeMillis());
+        Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
+            @Override
+            public void onComplete() {
+                Navigation.findNavController(view).navigateUp();
+                Model.instance.reloadReviewsListByMail(review.getWriterEmail());
+            }
+        });
+    }
+
+    private void updateReviewText() {
         Model.instance.updateReview(review, new Model.UpdateReviewListener() {
             @Override
             public void onComplete(Review r) {
@@ -138,16 +165,6 @@ public class edit_review_fragment extends Fragment {
 
     }
 
-    private void delete() {
-        review.setDeleted(true);
-        Model.instance.deleteReview(review, new Model.DeleteReviewListener() {
-            @Override
-            public void onComplete() {
-                Navigation.findNavController(view).navigateUp();
-                Model.instance.reloadReviewsListByMail(review.getWriterEmail());
-            }
-        });
-    }
 }
 
 

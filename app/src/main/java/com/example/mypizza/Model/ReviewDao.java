@@ -22,7 +22,7 @@ public interface ReviewDao {
     List<Review>  getReviewByMail(String email);
 
     @Query("UPDATE Review SET isDeleted = :isDel WHERE ReviewID =:id")
-    void logicDelete(Boolean isDel, String id);
+    void logicDelete(Boolean isDel,String id);
 
     @Query("UPDATE Review SET review = :review WHERE ReviewID =:id")
     void UpdateLocal(String review, String id);

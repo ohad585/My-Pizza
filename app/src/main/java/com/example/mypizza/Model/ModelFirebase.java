@@ -320,7 +320,7 @@ public class ModelFirebase {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         Review s = Review.fromJson(doc.getData());
                         s.setReviewID(doc.getId());
-                        if (s != null && !s.isDeleted()) {
+                        if (s != null) {
                             ReviewList.add(s);
                         }
                     }
@@ -408,7 +408,8 @@ public class ModelFirebase {
     }
     public void deleteReview(Review review, Model.DeleteReviewListener listener) {
         DocumentReference docRef = db.collection("reviews").document(review.getReviewID());
-        docRef.update(Review.IS_DELETED, review.isDeleted(),Review.LAST_UPDATED, FieldValue.serverTimestamp()).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.update(Review.IS_DELETED, true, Review.LAST_UPDATED, FieldValue.serverTimestamp())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.d("TAG", "DocumentSnapshot successfully deleted!");
