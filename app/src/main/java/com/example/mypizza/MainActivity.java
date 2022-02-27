@@ -28,14 +28,7 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment nav_host = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView2);
         navCtrl = nav_host.getNavController();
         NavigationUI.setupActionBarWithNavController(this,navCtrl);
-        if(u!=null){
-            Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-                @Override
-                public void onComplete(User user) {
-                    u=user;
-                }
-            });
-        }
+        getCurrentUser();
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -51,12 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
-            @Override
-            public void onComplete(User user) {
-                u=user;
-            }
-        });
+        getCurrentUser();
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.menu_pizzas_menu:
@@ -64,17 +52,16 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.menu_personal_page:
                     //add check if user is manager or client and to assign to u User parm
-                    if (u.isAdmin()==true){
+                    if (u!=null && u.isAdmin()==true){
                         navCtrl.navigate(R.id.personal_page_manager_fragment);
                     }
-                    else if (u.isAdmin()==false){
+                    else if (u!=null && u.isAdmin()==false){
                         navCtrl.navigate(R.id.personal_page_costumer_fragment);
                     }
 //                    else{
 //                        DialogFragment newFragment = new personalPageDialogFragment();
 //                        newFragment.show(getSupportFragmentManager(), "TAG");
 //                    }
-
                     return true;
 
                 case android.R.id.home:
@@ -84,6 +71,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    private void getCurrentUser(){
+        if(u!=null){
+            Model.instance.getCurrentUser(new Model.getCurrentUserListener() {
+                @Override
+                public void onComplete(User user) {
+                    u=user;
+                }
+            });
+        }
     }
 
 }
