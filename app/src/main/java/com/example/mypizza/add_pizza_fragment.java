@@ -62,8 +62,8 @@ public class add_pizza_fragment extends Fragment {
             public void onClick(View v) {
                 addPizzaBtn.setClickable(false);
                 pizzaImg.setClickable(false);
-                String price = pizzaPrice.getText().toString();
-                String description = pizzaDescription.getText().toString();
+                price = pizzaPrice.getText().toString();
+                description = pizzaDescription.getText().toString();
                 if(price.length()==0 || description.length()==0 || bitmap==null){
                     DialogFragment newFragment = new addPizzaEmptyFieldsDialog();
                     newFragment.show(getActivity().getSupportFragmentManager(), "TAG");

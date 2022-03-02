@@ -20,7 +20,6 @@ import com.example.mypizza.Model.User;
 public class MainActivity extends AppCompatActivity {
     NavController navCtrl;
     User u=null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
